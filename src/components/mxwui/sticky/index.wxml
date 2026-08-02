@@ -1,0 +1,1 @@
+<block wx:if="{{sticky}}"><view wx:if="{{check}}" class="mx-sticky-check" style="{{checkStyle}}" ></view><view class="mx-sticky" style="{{stickyStyle}}"><slot></slot></view></block><slot wx:else></slot> 

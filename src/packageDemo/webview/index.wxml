@@ -1,0 +1,3 @@
+<mx-nav theme="light" title="WebView" />
+<web-view wx:if="{{url}}" src="{{url}}" bindmessage="onMessage"></web-view>
+<debug-panel />

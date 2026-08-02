@@ -1,0 +1,1 @@
+.mx-skeleton-button{box-sizing:border-box;display:inline-block;width:120rpx;height:48rpx;border-radius:8rpx;background-color:#e1e5ec;vertical-align:top}.mx-skeleton-button.mx-skeleton-button-small{height:48rpx;width:100rpx}.mx-skeleton-button.mx-skeleton-button-medium{height:64rpx;width:120rpx}.mx-skeleton-button.mx-skeleton-button-large{height:80rpx;width:160rpx}

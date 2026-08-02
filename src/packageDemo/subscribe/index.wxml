@@ -1,0 +1,9 @@
+<mx-nav theme="light" title="订阅消息" />
+<view class="page-demo">
+    <view class="block tip">填写订阅消息模板 ID，多个用英文逗号分隔</view>
+    <view class="block">
+        <input placeholder="tmplId1,tmplId2" value="{{tmplIds}}" bindinput="onInput" />
+    </view>
+    <mx-btn type="primary" width="100%" bind:tap="handleSubscribe">发起订阅</mx-btn>
+</view>
+<debug-panel />

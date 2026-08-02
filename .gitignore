@@ -1,0 +1,9 @@
+dist/
+dist_dev/
+dist_staging/
+node_modules/
+.DS_Store
+yarn-error.log
+*.key
+private.*.pem
+project.private.config.json

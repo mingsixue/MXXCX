@@ -1,0 +1,6 @@
+<mx-nav theme="light" title="分包说明" />
+<view class="page-demo">
+    <view class="block tip">{{tip}}</view>
+    <view class="block tip">配置见 app.json → subPackages → root: packageDemo</view>
+</view>
+<debug-panel />

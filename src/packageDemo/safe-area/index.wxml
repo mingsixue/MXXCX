@@ -1,0 +1,9 @@
+<mx-nav theme="light" title="刘海屏/安全区" />
+<view class="page-demo">
+    <view class="block tip">状态栏高度：{{statusBarHeight}}px</view>
+    <view class="block tip">safeArea: {{safe.top}} / {{safe.bottom}} / {{safe.width}}x{{safe.height}}</view>
+    <view class="content">页面内容区域</view>
+    <view class="fixed-foot">底部固定条（下方为 mx-safe-area）</view>
+    <mx-safe-area />
+</view>
+<debug-panel />

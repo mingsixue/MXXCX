@@ -1,0 +1,8 @@
+<mx-nav theme="light" title="错误上报" />
+<view class="page-demo">
+    <view class="block tip">未配置 REPORT_URL 时仅打印到控制台</view>
+    <mx-btn type="primary" width="100%" bind:tap="handleReport">手动上报</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="handleError">捕获异常</mx-btn>
+</view>
+<debug-panel />

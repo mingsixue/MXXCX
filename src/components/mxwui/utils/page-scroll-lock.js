@@ -1,0 +1,1 @@
+let lockCount=0;function setPageOverflow(o){try{"undefined"!=typeof wx&&"function"==typeof wx.setPageStyle&&wx.setPageStyle({style:{overflow:o}})}catch(o){}}export function lockPageScroll(){lockCount+=1,1===lockCount&&setPageOverflow("hidden")}export function unlockPageScroll(){lockCount<=0?lockCount=0:(lockCount-=1,0===lockCount&&setPageOverflow("auto"))}

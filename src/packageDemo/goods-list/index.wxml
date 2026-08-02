@@ -1,0 +1,55 @@
+<mx-nav
+    theme="light"
+    title="商品列表"
+
+    secondIconName="share"
+    bind:nav_second_icon_tap="openShare"
+/>
+<view class="page-demo">
+    <view class="tip">使用 MXWUI 商品卡片 mx-sale-item，点击进入商品详情</view>
+
+    <view wx:if="{{list.length}}" class="goods-grid">
+        <view
+            wx:for="{{list}}"
+            wx:key="id"
+            class="goods-cell"
+        >
+            <mx-sale-item
+                index="{{index}}"
+                cover="{{item.cover}}"
+                title="{{item.title}}"
+                label="{{item.label}}"
+                price="{{item.price}}"
+                extendText="{{item.originPrice}}"
+                lineThrough="{{true}}"
+                lineClamp="{{2}}"
+                tags="{{item.tags}}"
+                btnText="{{item.btnText}}"
+                bind:sale_item_tap="onItemTap"
+                bind:sale_item_btn_tap="onBuyTap"
+            />
+        </view>
+    </view>
+
+    <mx-empty wx:if="{{!list.length && !loading}}" text="暂无商品" />
+    <view class="footer tip" wx:if="{{loading}}">加载中...</view>
+    <view class="footer tip" wx:elif="{{finished && list.length}}">没有更多了</view>
+    <view class="footer tip" wx:else>上拉加载更多</view>
+    <mx-safe-area />
+
+    <mx-share
+        visible="{{shareVisible}}"
+        title="分享商品列表"
+        desc="发现更多精选商品"
+        imgUrl="{{shareImage}}"
+        showWechat="{{true}}"
+        showCopyLink="{{true}}"
+        showFriends="{{false}}"
+        showQrcode="{{false}}"
+        zIndex="{{200}}"
+        bind:share_close="onShareClose"
+        bind:share_wechat="onShareWechat"
+        bind:share_copylink="onCopyLink"
+    />
+</view>
+<debug-panel />

@@ -1,0 +1,7 @@
+<mx-nav theme="light" title="Lottie 动画" />
+<view class="page-demo">
+    <view class="block tip">{{tip}}</view>
+    <canvas type="2d" id="lottie" class="canvas"></canvas>
+    <mx-btn type="primary" width="100%" bind:tap="handleInfo">查看接入说明</mx-btn>
+</view>
+<debug-panel />

@@ -1,0 +1,1 @@
+export default function createDialogBehavior(e){return Behavior({properties:{visible:{type:Boolean,value:!1},zIndex:{type:Number,value:1},isCloseMask:{type:Boolean,value:!0}},methods:{closeByMask(){this.data.isCloseMask&&(this.setData({visible:!1}),this.triggerEvent(e,{type:"maskClose"}))},closeByAction(t="close"){this.setData({visible:!1}),this.triggerEvent(e,{type:t})}}})}

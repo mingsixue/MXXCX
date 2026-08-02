@@ -1,0 +1,12 @@
+<mx-nav theme="light" title="个人中心模版" />
+<view class="page-demo">
+    <view class="profile">
+        <view class="name">{{isLogin ? (user.nickName || '已登录用户') : '未登录'}}</view>
+        <mx-btn wx:if="{{!isLogin}}" type="primary" small bind:tap="handleLogin">去登录</mx-btn>
+    </view>
+    <view class="block">
+        <view bind:tap="handleSetting"><mx-list-basic label="设置" arrows="{{true}}" /></view>
+        <view bind:tap="handleLogin"><mx-list-basic label="登录/退出" arrows="{{true}}" /></view>
+    </view>
+</view>
+<debug-panel />

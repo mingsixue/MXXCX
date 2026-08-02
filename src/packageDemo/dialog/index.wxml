@@ -1,0 +1,37 @@
+<mx-nav theme="light" title="弹窗示例" />
+<view class="page-demo">
+    <view class="block tip">警告框、确认框、自定义弹框、协议弹窗</view>
+    <mx-btn type="default" width="100%" bind:tap="handleAlert">警告框</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="primary" width="100%" bind:tap="openConfirm">确认框</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="openDialog">自定义弹框</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="primary" width="100%" bind:tap="openProtocol">协议弹窗</mx-btn>
+
+    <mx-confirm
+        visible="{{confirmVisible}}"
+        title="确认操作"
+        content="确定要继续吗？"
+        bind:cancel="onConfirmCancel"
+        bind:confirm="onConfirmOk"
+    />
+
+    <mx-dialog
+        visible="{{dialogVisible}}"
+        title="自定义弹框"
+        content="这里是自定义内容"
+        cancelBtn="{{true}}"
+        bind:dialog_close="onDialogClose"
+        bind:dialog_confirm="onDialogConfirm"
+    />
+
+    <mx-protocol-dialog
+        visible="{{protocolVisible}}"
+        content="这里是用户协议示例内容。滚动阅读后可点击同意。"
+        bind:protocol_dialog_close="onProtocolClose"
+        bind:protocol_dialog_cancel="onProtocolClose"
+        bind:protocol_dialog_confirm="onProtocolClose"
+    />
+</view>
+<debug-panel />

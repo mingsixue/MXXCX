@@ -1,0 +1,26 @@
+<mx-nav theme="light" title="MXXCX" />
+<view class="page-index">
+    <view class="hero">
+        <view class="title">MXXCX 框架</view>
+        <view class="desc">原生小程序开发框架 · MXWUI · 基建工具 · 页面模版</view>
+        <view class="meta">版本 {{version}} · {{env}} · {{isLogin ? '已登录' : '未登录'}}</view>
+    </view>
+
+    <block wx:for="{{groups}}" wx:key="title">
+        <view class="group-title">{{item.title}}</view>
+        <view class="group">
+            <view
+                wx:for="{{item.list}}"
+                wx:for-item="row"
+                wx:key="path"
+                data-path="{{row.path}}"
+                bind:tap="handleGo"
+            >
+                <mx-list-basic label="{{row.name}}" arrows="{{true}}" />
+            </view>
+        </view>
+    </block>
+
+    <mx-safe-area />
+    <debug-panel />
+</view>

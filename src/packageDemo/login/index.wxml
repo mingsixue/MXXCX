@@ -1,0 +1,11 @@
+<mx-nav theme="light" title="登录示例" />
+<view class="page-demo">
+    <view class="block tip">演示 wx.login 获取 code 流程。真实项目应把 code 发给后端换取 token。</view>
+    <mx-btn type="primary" width="100%" bind:tap="handleLogin">获取 code</mx-btn>
+    <view class="block tip" wx:if="{{code}}">code: {{code}}</view>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="handleMockLogin">模拟写入登录态</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="handleLogout">清除登录态</mx-btn>
+</view>
+<debug-panel />

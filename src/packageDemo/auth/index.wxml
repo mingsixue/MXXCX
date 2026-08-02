@@ -1,0 +1,33 @@
+<mx-nav theme="light" title="授权示例" />
+<view class="page-demo">
+    <view class="block tip">演示手机号、头像、昵称授权及打开设置。用户信息相关请使用官方最新能力。</view>
+
+    <view class="block profile-block">
+        <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+            <image wx:if="{{avatarUrl}}" class="avatar" src="{{avatarUrl}}" mode="aspectFill" />
+            <view wx:else class="avatar placeholder">头像</view>
+        </button>
+        <input
+            class="nickname"
+            type="nickname"
+            placeholder="请输入昵称"
+            value="{{nickname}}"
+            bindinput="onNicknameChange"
+            bindblur="onNicknameBlur"
+        />
+    </view>
+
+    <view class="block">
+        <button open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">手机号授权</button>
+        <view class="tip" wx:if="{{phoneCode}}">code: {{phoneCode}}</view>
+    </view>
+
+    <view class="block">
+        <mx-btn type="default" width="100%" bind:tap="handleLocationAuth">定位授权</mx-btn>
+        <view style="height: 24rpx;"></view>
+        <mx-btn type="primary" width="100%" bind:tap="handleOpenSetting">打开设置页</mx-btn>
+        <view style="height: 24rpx;"></view>
+        <mx-btn type="default" width="100%" bind:tap="handleProfile">用户信息说明</mx-btn>
+    </view>
+</view>
+<debug-panel />

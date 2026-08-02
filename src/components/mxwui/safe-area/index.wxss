@@ -1,0 +1,1 @@
+.mx-safe-area{width:100%;box-sizing:border-box}.mx-safe-area.mx-safe-area-top{height:constant(safe-area-inset-top);height:env(safe-area-inset-top)}.mx-safe-area.mx-safe-area-bottom{height:constant(safe-area-inset-bottom);height:env(safe-area-inset-bottom)}

@@ -1,0 +1,11 @@
+{
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "mx-nav": "/components/mxwui/nav/index",
+    "mx-sale-item": "/components/mxwui/sale-item/index",
+    "mx-empty": "/components/mxwui/empty/index",
+    "mx-safe-area": "/components/mxwui/safe-area/index",
+    "mx-share": "/components/mxwui/share/index"
+  },
+  "navigationStyle": "custom"
+}

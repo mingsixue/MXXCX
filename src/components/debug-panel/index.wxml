@@ -1,0 +1,182 @@
+<view wx:if="{{enabled}}" class="debug-root">
+    <view
+        class="dot env-{{envType}} {{open ? 'dot-on' : ''}} {{dotMoving ? 'dot-moving' : ''}}"
+        style="{{dotStyle}}"
+        catch:touchstart="onDotTouchStart"
+        catch:touchmove="onDotTouchMove"
+        catch:touchend="onDotTouchEnd"
+        catch:touchcancel="onDotTouchEnd"
+    >{{envLabel}}</view>
+
+    <view wx:if="{{open}}" class="mask" catch:tap="closePanel"></view>
+
+    <view wx:if="{{open}}" class="panel" catch:tap="">
+        <view class="grabber"></view>
+
+        <view class="header">
+            <view class="header-left">
+                <view class="title">Debug</view>
+                <view class="env-tag env-{{envType}}">{{envLabel}}</view>
+            </view>
+            <view class="header-right">
+                <view class="icon-btn" bind:tap="refreshAll">刷新</view>
+                <view class="icon-btn" bind:tap="closePanel">关闭</view>
+            </view>
+        </view>
+
+        <view class="tabs">
+            <view
+                wx:for="{{tabs}}"
+                wx:key="key"
+                class="tab {{tab === item.key ? 'on' : ''}}"
+                data-tab="{{item.key}}"
+                bind:tap="switchTab"
+            >
+                <text>{{item.name}}</text>
+                <view wx:if="{{tab === item.key}}" class="tab-line"></view>
+            </view>
+        </view>
+
+        <scroll-view scroll-y class="body" enhanced show-scrollbar="{{false}}">
+            <!-- 主面板 -->
+            <block wx:if="{{tab === 'main'}}">
+                <view class="info-card">
+                    <view class="info-row">
+                        <text class="info-label">版本</text>
+                        <text class="info-value" selectable>{{version}}</text>
+                    </view>
+                    <view class="info-row env-type-row">
+                        <text class="info-label">类型</text>
+                        <view class="env-type-chips">
+                            <view
+                                wx:for="{{envGroups}}"
+                                wx:key="type"
+                                class="env-type-chip env-{{item.type}} {{envType === item.type ? 'on' : ''}}"
+                                data-type="{{item.type}}"
+                                catch:tap="switchEnvType"
+                            >
+                                {{item.label}}
+                                <text wx:if="{{item.count > 1}}" class="env-type-count">{{item.count}}</text>
+                            </view>
+                        </view>
+                    </view>
+                    <view class="info-row">
+                        <text class="info-label">API</text>
+                        <text class="info-value path" selectable>{{apiHost}}</text>
+                    </view>
+                    <view class="info-row">
+                        <text class="info-label">Cookie</text>
+                        <text class="info-value path" selectable>{{envCookie}}</text>
+                    </view>
+                    <view class="info-row">
+                        <text class="info-label">包环境</text>
+                        <text class="info-value">{{packEnv}}</text>
+                    </view>
+                    <view class="info-row">
+                        <text class="info-label">路径</text>
+                        <view class="info-value-wrap">
+                            <text class="info-value path" selectable>{{path}}</text>
+                            <text class="info-copy" catch:tap="copyPath">复制</text>
+                        </view>
+                    </view>
+                    <view class="info-row last">
+                        <text class="info-label">参数</text>
+                        <view class="info-value-wrap">
+                            <text class="info-value path" selectable>{{query}}</text>
+                            <text class="info-copy" catch:tap="copyQuery">复制</text>
+                        </view>
+                    </view>
+                </view>
+
+                <block wx:for="{{actionGroups}}" wx:key="title" wx:for-item="group">
+                    <view class="section-title">{{group.title}}</view>
+                    <view class="action-grid">
+                        <view
+                            wx:for="{{group.list}}"
+                            wx:for-item="action"
+                            wx:key="key"
+                            class="action-item {{action.danger ? 'danger' : ''}}"
+                            data-key="{{action.key}}"
+                            bind:tap="handleAction"
+                        >{{action.name}}</view>
+                    </view>
+                </block>
+            </block>
+
+            <!-- 请求 -->
+            <block wx:elif="{{tab === 'req'}}">
+                <view class="toolbar">
+                    <view class="tool-btn" bind:tap="refreshAll">刷新</view>
+                    <view class="tool-btn danger" bind:tap="clearLogs">清空</view>
+                </view>
+                <view
+                    wx:for="{{logs}}"
+                    wx:key="time"
+                    class="list-card"
+                    data-index="{{index}}"
+                    bind:tap="copyLogItem"
+                >
+                    <view class="list-main">
+                        <text class="method method-{{item.method}}">{{item.method}}</text>
+                        <text class="list-title">{{item.url}}</text>
+                    </view>
+                    <view class="list-sub">
+                        <text>{{item.statusCode}}</text>
+                        <text class="dot-sep">·</text>
+                        <text>{{item.duration}}ms</text>
+                        <text wx:if="{{item.envName}}" class="dot-sep">·</text>
+                        <text wx:if="{{item.envName}}">{{item.envName}}</text>
+                        <text class="hint">点击复制</text>
+                    </view>
+                </view>
+                <view wx:if="{{!logs.length}}" class="empty">
+                    <view class="empty-title">暂无请求记录</view>
+                    <view class="empty-desc">发起接口请求后会显示在这里</view>
+                </view>
+            </block>
+
+            <!-- 缓存 -->
+            <block wx:elif="{{tab === 'store'}}">
+                <view class="toolbar">
+                    <view class="tool-btn" bind:tap="refreshAll">刷新</view>
+                    <view class="tool-btn danger" bind:tap="clearStorage">全部清除</view>
+                </view>
+                <view wx:if="{{storageItems.length}}" class="store-table">
+                    <view class="store-tr store-th">
+                        <text class="store-td col-name">名称</text>
+                        <text class="store-td col-value">值</text>
+                        <text class="store-td col-expire">有效期</text>
+                        <text class="store-td col-ops">操作</text>
+                    </view>
+                    <view
+                        wx:for="{{storageItems}}"
+                        wx:key="key"
+                        class="store-tr store-tr-tap"
+                        data-key="{{item.key}}"
+                        bind:tap="onStorageItemTap"
+                    >
+                        <text class="store-td col-name">{{item.key}}</text>
+                        <text class="store-td col-value">{{item.valuePreview}}</text>
+                        <text class="store-td col-expire {{item.expired ? 'expired' : ''}}">{{item.expireText}}</text>
+                        <view class="store-td col-ops">
+                            <text class="op danger" data-key="{{item.key}}" catch:tap="removeStorageKey">删除</text>
+                        </view>
+                    </view>
+                </view>
+                <view wx:else class="empty">
+                    <view class="empty-title">暂无缓存</view>
+                    <view class="empty-desc">本地 Storage 为空</view>
+                </view>
+            </block>
+
+            <!-- 系统 -->
+            <block wx:else>
+                <view class="sys-card">
+                    <text class="code" selectable user-select>{{systemText}}</text>
+                </view>
+            </block>
+
+            <view class="safe-bottom"></view>
+        </scroll-view>
+    </view>
+</view>

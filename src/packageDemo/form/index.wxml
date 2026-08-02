@@ -1,0 +1,62 @@
+<mx-nav theme="light" title="表单示例" />
+<view class="page-demo">
+    <view class="panel">
+        <mx-input
+            styleType="horizontal"
+            label="姓名"
+            placeholder="请输入姓名"
+            value="{{name}}"
+            bind:input_change="onNameChange"
+        />
+        <mx-textarea
+            label="备注"
+            placeholder="请输入备注"
+            value="{{remark}}"
+            bind:textarea_change="onRemarkChange"
+        />
+        <mx-radio-group
+            styleType="horizontal"
+            label="单选"
+            options="{{genderOptions}}"
+            bind:radio_group_change="onGenderChange"
+        />
+        <mx-checkbox-group
+            styleType="horizontal"
+            label="多选"
+            mode="multiple"
+            options="{{hobbyOptions}}"
+            bind:checkbox_group_change="onHobbyChange"
+        />
+        <mx-list-switch
+            label="开关通知"
+            checked="{{enableNotify}}"
+            bind:list_switch_change="onSwitchChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="下拉选择"
+            options="{{pickerOptions}}"
+            rangeKey="label"
+            index="{{pickerIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onPickerChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="region"
+            label="省市区"
+            region="{{region}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            showLine="{{false}}"
+            bind:list_picker_change="onRegionChange"
+        />
+    </view>
+
+    <view class="panel submit-panel">
+        <mx-btn type="primary" width="702rpx" bind:tap="handleSubmit">提交</mx-btn>
+    </view>
+</view>
+<debug-panel />

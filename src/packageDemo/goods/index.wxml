@@ -1,0 +1,92 @@
+<mx-nav
+    theme="light"
+    title="商品详情模版"
+
+    secondIconName="share"
+    bind:nav_second_icon_tap="openShare"
+/>
+<view class="page-demo">
+    <view class="banner-wrap">
+        <mx-swiper
+            options="{{banners}}"
+            width="750rpx"
+            height="750rpx"
+            circular="{{true}}"
+            autoplay="{{true}}"
+            interval="{{3000}}"
+            showDots="{{true}}"
+            bind:swiper_change="onSwiperChange"
+        />
+        <view class="banner-index">{{current + 1}}/{{banners.length}}</view>
+    </view>
+
+    <view class="block">
+        <view class="price-row">
+            <view class="price">¥{{detail.price}}</view>
+            <view class="origin" wx:if="{{detail.originPrice}}">¥{{detail.originPrice}}</view>
+            <view class="sales">已售 {{detail.sales}}</view>
+        </view>
+        <view class="title">{{detail.title}}</view>
+        <view class="tip">{{detail.desc}}</view>
+        <view class="tags">
+            <text wx:for="{{detail.tags}}" wx:key="*this" class="tag">{{item}}</text>
+        </view>
+    </view>
+
+    <view class="block">
+        <view class="section-title">商品参数</view>
+        <view class="spec-row" wx:for="{{detail.specs}}" wx:key="label">
+            <text class="spec-label">{{item.label}}</text>
+            <text class="spec-value">{{item.value}}</text>
+        </view>
+    </view>
+
+    <view class="block">
+        <view class="section-title">服务保障</view>
+        <view class="service-list">
+            <view class="service-item" wx:for="{{detail.services}}" wx:key="*this">
+                <text class="service-dot">●</text>
+                <text>{{item}}</text>
+            </view>
+        </view>
+    </view>
+
+    <view class="block detail-block">
+        <view class="section-title">图文详情</view>
+        <view class="detail-text">{{detail.detailText}}</view>
+        <view class="detail-placeholder" wx:for="{{detail.detailImages}}" wx:key="*this">
+            <text>{{item}}</text>
+        </view>
+    </view>
+
+    <mx-foot-btns
+        styleType="combination"
+        leftIcons="{{footIcons}}"
+        minorBtnText="加入购物车"
+        minorBtnType="ghost"
+        minorBtnColor="#CA0E2D"
+        mainBtnText="立即购买"
+        mainBtnType="primary"
+        mainBtnColor="#CA0E2D"
+        zIndex="{{100}}"
+        bind:foot_btns_icon="onFootIcon"
+        bind:foot_btns_minor="onAddCart"
+        bind:foot_btns_main="onBuy"
+    />
+
+    <mx-share
+        visible="{{shareVisible}}"
+        title="分享商品"
+        desc="{{detail.title}}"
+        imgUrl="{{shareImage}}"
+        showWechat="{{true}}"
+        showCopyLink="{{true}}"
+        showFriends="{{false}}"
+        showQrcode="{{false}}"
+        zIndex="{{200}}"
+        bind:share_close="onShareClose"
+        bind:share_wechat="onShareWechat"
+        bind:share_copylink="onCopyLink"
+    />
+</view>
+<debug-panel />

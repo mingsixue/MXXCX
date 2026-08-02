@@ -1,0 +1,25 @@
+<mx-nav theme="light" title="列表示例" />
+<view class="page-demo">
+    <view class="toolbar">
+        <mx-btn type="primary" small bind:tap="handleUpdateSecond">更新第2条</mx-btn>
+        <mx-btn type="default" small bind:tap="handleClear">清空</mx-btn>
+        <mx-btn type="default" small bind:tap="reload">重新加载</mx-btn>
+    </view>
+
+    <view class="block" wx:if="{{list.length}}">
+        <mx-list-basic
+            wx:for="{{list}}"
+            wx:key="id"
+            label="{{item.title}}"
+            content="{{item.desc}}"
+            isLeft="{{true}}"
+            arrows="{{false}}"
+        />
+    </view>
+
+    <mx-empty wx:if="{{!list.length && !loading}}" text="暂无数据" />
+    <view class="footer tip" wx:if="{{loading}}">加载中...</view>
+    <view class="footer tip" wx:elif="{{finished && list.length}}">没有更多了</view>
+    <view class="footer tip" wx:else>上拉加载更多 · 下拉刷新</view>
+</view>
+<debug-panel />

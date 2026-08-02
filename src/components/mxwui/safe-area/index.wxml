@@ -1,0 +1,1 @@
+<view wx:if="{{showTop}}" class="mx-safe-area mx-safe-area-top" style="{{customStyle}}" ></view><view wx:if="{{showBottom}}" class="mx-safe-area mx-safe-area-bottom" style="{{customStyle}}" ></view> 

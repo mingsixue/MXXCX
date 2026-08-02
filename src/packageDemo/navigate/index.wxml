@@ -1,0 +1,12 @@
+<mx-nav theme="light" title="跳转示例" />
+<view class="page-demo">
+    <view class="block tip">{{stackTip}}</view>
+    <mx-btn type="primary" width="100%" bind:tap="handlePushSelf">再打开本页（测 8 层栈）</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="handleWebview">打开 H5 WebView</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="handleMiniProgram">跳转第三方小程序</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="handleBack">返回上一页</mx-btn>
+</view>
+<debug-panel />

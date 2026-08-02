@@ -1,0 +1,19 @@
+<mx-nav theme="light" title="骨架屏" />
+<view class="page-demo">
+    <view class="block" wx:if="{{loading}}">
+        <view class="skeleton-item">
+            <mx-skeleton-avatar loading="{{true}}" animate="{{true}}" />
+        </view>
+        <view class="skeleton-item">
+            <mx-skeleton-title loading="{{true}}" animate="{{true}}" />
+        </view>
+        <view class="skeleton-item">
+            <mx-skeleton-paragraph loading="{{true}}" animate="{{true}}" rows="{{4}}" />
+        </view>
+    </view>
+    <view class="block" wx:else>
+        <view class="tip">内容加载完成</view>
+        <mx-btn type="primary" width="100%" bind:tap="handleReload">重新演示</mx-btn>
+    </view>
+</view>
+<debug-panel />

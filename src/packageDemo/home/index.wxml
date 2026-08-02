@@ -1,0 +1,10 @@
+<mx-nav theme="light" title="首页模版" />
+<view class="page-demo">
+    <view class="banner">首页模版</view>
+    <view class="block">
+        <view wx:for="{{menus}}" wx:key="path" data-path="{{item.path}}" bind:tap="handleGo">
+            <mx-list-basic label="{{item.name}}" arrows="{{true}}" />
+        </view>
+    </view>
+</view>
+<debug-panel />

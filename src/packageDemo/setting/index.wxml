@@ -1,0 +1,11 @@
+<mx-nav theme="light" title="设置页" />
+<view class="page-demo">
+    <view class="block">
+        <view data-name="账号安全" bind:tap="handleItem"><mx-list-basic label="账号安全" arrows="{{true}}" /></view>
+        <view data-name="消息通知" bind:tap="handleItem"><mx-list-basic label="消息通知" arrows="{{true}}" /></view>
+        <view data-name="隐私设置" bind:tap="handleItem"><mx-list-basic label="隐私设置" arrows="{{true}}" /></view>
+        <view data-name="关于我们" bind:tap="handleItem"><mx-list-basic label="关于我们" content="MXXCX" arrows="{{true}}" showLine="{{false}}" /></view>
+    </view>
+    <view class="version" wx:if="{{version}}">当前版本 {{version}}</view>
+</view>
+<debug-panel />

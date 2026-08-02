@@ -1,0 +1,9 @@
+<mx-nav theme="light" title="结果页" />
+<mx-result
+    type="success"
+    title="操作成功"
+    message="这是结果页模版示例"
+    buttons="{{buttons}}"
+    bind:result_btn_tap="onBtn"
+/>
+<debug-panel />

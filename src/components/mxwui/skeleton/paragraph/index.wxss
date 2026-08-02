@@ -1,0 +1,1 @@
+.mx-skeleton-paragraph{box-sizing:border-box;width:100%}.mx-skeleton-paragraph .mx-skeleton-paragraph-row{width:100%;height:30rpx;margin-bottom:24rpx;border-radius:8rpx;background-color:#e1e5ec}.mx-skeleton-paragraph .mx-skeleton-paragraph-row:last-child{margin-bottom:0}.mx-skeleton-paragraph .mx-skeleton-paragraph-row.mx-skeleton-paragraph-row-last{width:60%}

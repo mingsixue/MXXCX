@@ -1,0 +1,14 @@
+<mx-nav theme="light" title="底部导航 · 我的" />
+<view class="page">
+    <view class="intro">
+        <view class="title">我的</view>
+        <view class="desc">底部导航示例的「我的」页。</view>
+    </view>
+    <view class="list-panel">
+        <mx-list-basic label="订单" arrows="{{true}}" />
+        <mx-list-basic label="收藏" arrows="{{true}}" />
+        <mx-list-basic label="设置" arrows="{{true}}" showLine="{{false}}" />
+    </view>
+</view>
+<mx-menu options="{{menus}}" current="{{3}}" selectColor="#CA0E2D" />
+<debug-panel />

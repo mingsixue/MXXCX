@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "mx-result": "/components/mxwui/result/index",
+    "mx-nav": "/components/mxwui/nav/index"
+  },
+  "navigationStyle": "custom"
+}

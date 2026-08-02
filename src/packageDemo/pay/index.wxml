@@ -1,0 +1,8 @@
+<mx-nav theme="light" title="支付示例" />
+<view class="page-demo">
+    <view class="block tip">{{tip}}</view>
+    <mx-btn type="primary" width="100%" bind:tap="handlePay">支付封装调用</mx-btn>
+    <view style="height:24rpx"></view>
+    <mx-btn type="default" width="100%" bind:tap="handlePayMockSuccess">调用 requestPayment（mock）</mx-btn>
+</view>
+<debug-panel />

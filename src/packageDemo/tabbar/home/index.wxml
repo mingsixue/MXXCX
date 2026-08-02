@@ -1,0 +1,10 @@
+<mx-nav theme="light" title="底部导航 · 首页" />
+<view class="page">
+    <view class="card">
+        <view class="title">首页</view>
+        <view class="desc">使用 MXWUI mx-menu 实现底部导航，点击 Tab 会 redirectTo 切换页面（不增加页面栈）。</view>
+        <mx-btn type="primary" width="100%" bind:tap="goGoodsList">去商品列表</mx-btn>
+    </view>
+</view>
+<mx-menu options="{{menus}}" current="{{0}}" selectColor="#CA0E2D" />
+<debug-panel />
