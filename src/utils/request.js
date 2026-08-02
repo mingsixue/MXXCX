@@ -175,8 +175,7 @@ const request = (options = {}) => {
                 });
                 const handled =
                     options.onError &&
-                    options.onError({ type: "network", message: err.errMsg, body: err }) ===
-                        true;
+                    options.onError({ type: "network", message: err.errMsg, body: err }) === true;
                 if (!handled && !options.silent) {
                     wx.showToast({
                         title: "网络异常，请稍后重试",
@@ -205,8 +204,7 @@ const request = (options = {}) => {
  * @param {object} [options] 其余 request 选项
  * @returns {Promise}
  */
-const get = (url, data, options = {}) =>
-    request({ ...options, url, data, method: "GET" });
+const get = (url, data, options = {}) => request({ ...options, url, data, method: "GET" });
 
 /**
  * POST 请求
@@ -215,8 +213,7 @@ const get = (url, data, options = {}) =>
  * @param {object} [options] 其余 request 选项
  * @returns {Promise}
  */
-const post = (url, data, options = {}) =>
-    request({ ...options, url, data, method: "POST" });
+const post = (url, data, options = {}) => request({ ...options, url, data, method: "POST" });
 
 export { request, get, post, getRequestLogs, clearRequestLogs, abortPending };
 export default request;

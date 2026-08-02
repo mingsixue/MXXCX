@@ -1,1 +1,37 @@
-import{createPulseController}from"../pulse";const SIZE_LIST=["small","medium","large"];Component({properties:{loading:{type:Boolean,value:!0},animate:{type:Boolean,value:!1},size:{type:String,value:"medium"},customStyle:{type:String,value:""}},data:{showSkeleton:!0,sizeClass:"mx-skeleton-button-medium",pulseAni:null},observers:{"loading, animate, size":function(){this._sync()}},lifetimes:{attached(){this._pulse=createPulseController(this),this._sync()},detached(){this._pulse&&this._pulse.stop()}},methods:{_resolveSize:e=>SIZE_LIST.indexOf(e)>=0?e:"medium",_sync(){const{loading:e,animate:s,size:t}=this.data,l=!1!==e;this.setData({showSkeleton:l,sizeClass:`mx-skeleton-button-${this._resolveSize(t)}`}),this._pulse||(this._pulse=createPulseController(this)),this._pulse.sync(!!s,l)}}});
+import { createPulseController } from "../pulse";
+const SIZE_LIST = ["small", "medium", "large"];
+Component({
+    properties: {
+        loading: { type: Boolean, value: !0 },
+        animate: { type: Boolean, value: !1 },
+        size: { type: String, value: "medium" },
+        customStyle: { type: String, value: "" },
+    },
+    data: { showSkeleton: !0, sizeClass: "mx-skeleton-button-medium", pulseAni: null },
+    observers: {
+        "loading, animate, size": function () {
+            this._sync();
+        },
+    },
+    lifetimes: {
+        attached() {
+            ((this._pulse = createPulseController(this)), this._sync());
+        },
+        detached() {
+            this._pulse && this._pulse.stop();
+        },
+    },
+    methods: {
+        _resolveSize: (e) => (SIZE_LIST.indexOf(e) >= 0 ? e : "medium"),
+        _sync() {
+            const { loading: e, animate: s, size: t } = this.data,
+                l = !1 !== e;
+            (this.setData({
+                showSkeleton: l,
+                sizeClass: `mx-skeleton-button-${this._resolveSize(t)}`,
+            }),
+                this._pulse || (this._pulse = createPulseController(this)),
+                this._pulse.sync(!!s, l));
+        },
+    },
+});

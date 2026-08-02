@@ -1,1 +1,116 @@
-import{COLOR}from"../utils/common";const SIZE_LIST=["small","medium","large","x-large"],DOT_SCALES=[1,.86,.72,.58,.44,.32,.22,.12],PETAL_COUNT=12,TYPE_LIST=["spin","mini","dot","petal"];function normalizeHexColor(e){if("string"!=typeof e)return"";const t=e.trim();return t||""}function resolveType(e){return TYPE_LIST.indexOf(e)>=0?e:"spin"}Component({properties:{type:{type:String,value:"spin"},color:{type:String,value:COLOR.THEME_COLOR},size:{type:String,value:"medium"},strokeWidth:{type:null,value:3},speed:{type:null,value:.9},customStyle:{type:String,value:""}},data:{resolvedType:"spin",sizeClass:"mx-loading-medium",spinIconStyle:"",miniItemStyle:"",dotItems:[],petalItems:[],rootStyle:""},observers:{"type, color, size, strokeWidth, speed, customStyle":function(){this._syncStyle()}},attached(){this._syncStyle()},methods:{_resolveSizeClass:e=>SIZE_LIST.indexOf(e)>=0?`mx-loading-${e}`:"mx-loading-medium",_resolveStrokeWidth(e){const t=Number(e);return Number.isNaN(t)||t<=0?3:t},_resolveSpeed(e){const t=Number(e);return Number.isNaN(t)||t<=0?.9:t},_buildDotItems:e=>DOT_SCALES.map((t,o)=>({index:o,spokeStyle:`transform:rotate(${45*o}deg);`,itemStyle:[`background-color:${e};`,`transform:translateX(-50%) scale(${t});`].join("")})),_buildPetalItems(e){const t=[];for(let o=0;o<12;o++){const r=Number((1-o/12*.92).toFixed(3));t.push({index:o,spokeStyle:`transform:rotate(${30*o}deg);`,itemStyle:`background-color:${e};opacity:${r};`})}return t},_syncStyle(){const{type:e,color:t,size:o,strokeWidth:r,speed:s,customStyle:i}=this.data,l=resolveType(e),n=normalizeHexColor(t)||COLOR.THEME_COLOR,a=this._resolveSizeClass(o),m=this._resolveStrokeWidth(r);let d="",p="",u=[],S=[],c=i||"";"mini"===l?p=`background-color:${n};`:"dot"===l?(u=this._buildDotItems(n),c=`animation-duration:${this._resolveSpeed(s)}s;${c}`):"petal"===l?(S=this._buildPetalItems(n),c=`animation-duration:${this._resolveSpeed(s)}s;${c}`):d=[`border-width:${m}rpx;`,`border-top-color:${n};`,`border-left-color:${n};`,"border-right-color:transparent;","border-bottom-color:transparent;"].join(""),this.setData({resolvedType:l,sizeClass:a,spinIconStyle:d,miniItemStyle:p,dotItems:u,petalItems:S,rootStyle:c})}}});
+import { COLOR } from "../utils/common";
+const SIZE_LIST = ["small", "medium", "large", "x-large"],
+    DOT_SCALES = [1, 0.86, 0.72, 0.58, 0.44, 0.32, 0.22, 0.12],
+    PETAL_COUNT = 12,
+    TYPE_LIST = ["spin", "mini", "dot", "petal"];
+function normalizeHexColor(e) {
+    if ("string" != typeof e) return "";
+    const t = e.trim();
+    return t || "";
+}
+function resolveType(e) {
+    return TYPE_LIST.indexOf(e) >= 0 ? e : "spin";
+}
+Component({
+    properties: {
+        type: { type: String, value: "spin" },
+        color: { type: String, value: COLOR.THEME_COLOR },
+        size: { type: String, value: "medium" },
+        strokeWidth: { type: null, value: 3 },
+        speed: { type: null, value: 0.9 },
+        customStyle: { type: String, value: "" },
+    },
+    data: {
+        resolvedType: "spin",
+        sizeClass: "mx-loading-medium",
+        spinIconStyle: "",
+        miniItemStyle: "",
+        dotItems: [],
+        petalItems: [],
+        rootStyle: "",
+    },
+    observers: {
+        "type, color, size, strokeWidth, speed, customStyle": function () {
+            this._syncStyle();
+        },
+    },
+    attached() {
+        this._syncStyle();
+    },
+    methods: {
+        _resolveSizeClass: (e) =>
+            SIZE_LIST.indexOf(e) >= 0 ? `mx-loading-${e}` : "mx-loading-medium",
+        _resolveStrokeWidth(e) {
+            const t = Number(e);
+            return Number.isNaN(t) || t <= 0 ? 3 : t;
+        },
+        _resolveSpeed(e) {
+            const t = Number(e);
+            return Number.isNaN(t) || t <= 0 ? 0.9 : t;
+        },
+        _buildDotItems: (e) =>
+            DOT_SCALES.map((t, o) => ({
+                index: o,
+                spokeStyle: `transform:rotate(${45 * o}deg);`,
+                itemStyle: [
+                    `background-color:${e};`,
+                    `transform:translateX(-50%) scale(${t});`,
+                ].join(""),
+            })),
+        _buildPetalItems(e) {
+            const t = [];
+            for (let o = 0; o < 12; o++) {
+                const r = Number((1 - (o / 12) * 0.92).toFixed(3));
+                t.push({
+                    index: o,
+                    spokeStyle: `transform:rotate(${30 * o}deg);`,
+                    itemStyle: `background-color:${e};opacity:${r};`,
+                });
+            }
+            return t;
+        },
+        _syncStyle() {
+            const {
+                    type: e,
+                    color: t,
+                    size: o,
+                    strokeWidth: r,
+                    speed: s,
+                    customStyle: i,
+                } = this.data,
+                l = resolveType(e),
+                n = normalizeHexColor(t) || COLOR.THEME_COLOR,
+                a = this._resolveSizeClass(o),
+                m = this._resolveStrokeWidth(r);
+            let d = "",
+                p = "",
+                u = [],
+                S = [],
+                c = i || "";
+            ("mini" === l
+                ? (p = `background-color:${n};`)
+                : "dot" === l
+                  ? ((u = this._buildDotItems(n)),
+                    (c = `animation-duration:${this._resolveSpeed(s)}s;${c}`))
+                  : "petal" === l
+                    ? ((S = this._buildPetalItems(n)),
+                      (c = `animation-duration:${this._resolveSpeed(s)}s;${c}`))
+                    : (d = [
+                          `border-width:${m}rpx;`,
+                          `border-top-color:${n};`,
+                          `border-left-color:${n};`,
+                          "border-right-color:transparent;",
+                          "border-bottom-color:transparent;",
+                      ].join("")),
+                this.setData({
+                    resolvedType: l,
+                    sizeClass: a,
+                    spinIconStyle: d,
+                    miniItemStyle: p,
+                    dotItems: u,
+                    petalItems: S,
+                    rootStyle: c,
+                }));
+        },
+    },
+});

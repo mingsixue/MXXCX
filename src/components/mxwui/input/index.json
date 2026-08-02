@@ -1,1 +1,9 @@
-{"component":true,"usingComponents":{"mx-icon":"../icon/index","mx-list-basic":"../list-basic/index","form-label":"../components/form-label/index","form-desc":"../components/form-desc/index"}}
+{
+    "component": true,
+    "usingComponents": {
+        "mx-icon": "../icon/index",
+        "mx-list-basic": "../list-basic/index",
+        "form-label": "../components/form-label/index",
+        "form-desc": "../components/form-desc/index"
+    }
+}

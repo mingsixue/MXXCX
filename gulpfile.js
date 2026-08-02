@@ -30,11 +30,7 @@ const NODE_ENV = process.env.NODE_ENV || "dev";
 const isProduction = NODE_ENV === "production";
 const isStaging = NODE_ENV === "staging";
 
-const DIST = isProduction
-    ? "./dist"
-    : isStaging
-    ? "./dist_staging"
-    : "./dist_dev";
+const DIST = isProduction ? "./dist" : isStaging ? "./dist_staging" : "./dist_dev";
 
 const wechatToolPath = "/Applications/wechatwebdevtools.app";
 const wxcli = `${wechatToolPath}/Contents/MacOS/cli`;
@@ -63,18 +59,12 @@ function resolveConfigPath() {
 
 function resolveProjectJsonPath() {
     if (isProduction) {
-        return fs.existsSync("online.config.json")
-            ? "online.config.json"
-            : "project.config.json";
+        return fs.existsSync("online.config.json") ? "online.config.json" : "project.config.json";
     }
     if (isStaging) {
-        return fs.existsSync("staging.config.json")
-            ? "staging.config.json"
-            : "dev.config.json";
+        return fs.existsSync("staging.config.json") ? "staging.config.json" : "dev.config.json";
     }
-    return fs.existsSync("dev.config.json")
-        ? "dev.config.json"
-        : "project.config.dev.json";
+    return fs.existsSync("dev.config.json") ? "dev.config.json" : "project.config.dev.json";
 }
 
 const filePath = {
@@ -127,7 +117,8 @@ const miniWxml = function () {
 };
 
 function wxml() {
-    return src(filePath.wxmlPath)
+    return src(filePath.wxmlPath, { allowEmpty: true })
+        .pipe(plumber(onError))
         .pipe(miniWxml())
         .pipe(changed(DIST, { extension: ".wxml" }))
         .pipe(rename({ extname: ".wxml" }))
@@ -135,7 +126,8 @@ function wxml() {
 }
 
 function wxss() {
-    return src(filePath.cssPath, { base: "src/" })
+    return src(filePath.cssPath, { base: "src/", allowEmpty: true })
+        .pipe(plumber(onError))
         .pipe(changed(DIST, { extension: ".wxss" }))
         .pipe(
             alias({
@@ -152,7 +144,6 @@ function wxss() {
         .pipe(less())
         .pipe(autoprefixer())
         .pipe(cleancss({ compatibility: "ie9" }))
-        .pipe(plumber(onError))
         .pipe(rename({ extname: ".wxss" }))
         .pipe(dest(DIST));
 }
@@ -160,9 +151,7 @@ function wxss() {
 function config() {
     // eslint-disable-next-line no-console
     console.log(
-        chalk.cyan(
-            `[config] env=${NODE_ENV} version=${BUILD_VERSION} -> ${filePath.configPath}`
-        )
+        chalk.cyan(`[config] env=${NODE_ENV} version=${BUILD_VERSION} -> ${filePath.configPath}`)
     );
     return src(filePath.configPath, { base: "src/", allowEmpty: true })
         .pipe(plumber(onError))
@@ -191,8 +180,9 @@ function js() {
 
 function json() {
     return src(filePath.projectJsonPath, { allowEmpty: true })
+        .pipe(plumber(onError))
         .pipe(rename({ basename: "project.config" }))
-        .pipe(src(filePath.jsonPath))
+        .pipe(src(filePath.jsonPath, { allowEmpty: true }))
         .pipe(
             alias({
                 "@components": aliasConfig["@components"],
@@ -209,7 +199,7 @@ function json() {
 }
 
 function wxs() {
-    return src(filePath.wxsPath)
+    return src(filePath.wxsPath, { allowEmpty: true })
         .pipe(plumber(onError))
         .pipe(changed(DIST))
         .pipe(babel())
@@ -237,15 +227,10 @@ function writeDistPackageJson(cb) {
     };
     const distDir = path.resolve(DIST);
     if (!fs.existsSync(distDir)) fs.mkdirSync(distDir, { recursive: true });
-    fs.writeFileSync(
-        path.join(distDir, "package.json"),
-        `${JSON.stringify(distPkg, null, 2)}\n`
-    );
+    fs.writeFileSync(path.join(distDir, "package.json"), `${JSON.stringify(distPkg, null, 2)}\n`);
     // eslint-disable-next-line no-console
     console.log(
-        chalk.cyan(
-            `[npm] write ${DIST}/package.json deps=[${Object.keys(deps).join(", ") || "-"}]`
-        )
+        chalk.cyan(`[npm] write ${DIST}/package.json deps=[${Object.keys(deps).join(", ") || "-"}]`)
     );
     cb();
 }
@@ -270,11 +255,7 @@ async function copyMiniprogramNpm() {
         const pkgFile = path.join(pkgDir, "package.json");
         if (!fs.existsSync(pkgFile)) {
             // eslint-disable-next-line no-console
-            console.log(
-                chalk.yellow(
-                    `[npm] skip ${name}（未安装，请先在工程根目录执行 yarn）`
-                )
-            );
+            console.log(chalk.yellow(`[npm] skip ${name}（未安装，请先在工程根目录执行 yarn）`));
             continue;
         }
         const meta = JSON.parse(fs.readFileSync(pkgFile, "utf8"));
@@ -292,9 +273,7 @@ async function copyMiniprogramNpm() {
 
         if (fs.existsSync(builtDir)) {
             // eslint-disable-next-line no-console
-            console.log(
-                chalk.cyan(`[npm] copy ${name}/${mpDir} -> miniprogram_npm`)
-            );
+            console.log(chalk.cyan(`[npm] copy ${name}/${mpDir} -> miniprogram_npm`));
             await pipeToPromise(
                 src(`${builtDir}/**/*`, { allowEmpty: true }).pipe(
                     dest(`${DIST}/miniprogram_npm/${name}`)
@@ -302,11 +281,7 @@ async function copyMiniprogramNpm() {
             );
         } else {
             // eslint-disable-next-line no-console
-            console.log(
-                chalk.yellow(
-                    `[npm] ${name} 无 ${mpDir}，请在开发者工具中构建 npm`
-                )
-            );
+            console.log(chalk.yellow(`[npm] ${name} 无 ${mpDir}，请在开发者工具中构建 npm`));
         }
     }
 }
@@ -317,38 +292,85 @@ function openTool() {
     });
 }
 
+/** src 相对路径 → 产物路径（含扩展名映射） */
+function toDistPath(srcFilePath) {
+    const absSrcRoot = path.resolve("src");
+    const absFile = path.resolve(srcFilePath);
+    let rel = path.relative(absSrcRoot, absFile);
+    if (rel.startsWith("..") || path.isAbsolute(rel)) {
+        // 兜底：相对路径形如 src/xxx
+        rel = String(srcFilePath).replace(/^src[\\/]/, "");
+    }
+    const ext = path.extname(rel).toLowerCase();
+    if (ext === ".less") {
+        rel = rel.slice(0, -5) + ".wxss";
+    } else if (ext === ".xml") {
+        rel = rel.slice(0, -4) + ".wxml";
+    }
+    return path.join(DIST, rel);
+}
+
+function safeWatch(globs, opts, task) {
+    let watcherInst;
+    if (typeof opts === "function") {
+        watcherInst = watch(globs, opts);
+    } else if (typeof task === "function") {
+        watcherInst = watch(globs, opts, task);
+    } else {
+        watcherInst = watch(globs, opts || {});
+    }
+    watcherInst.on("error", (err) => {
+        // eslint-disable-next-line no-console
+        console.log(chalk.red(`[watch] ${err && err.message ? err.message : err}`));
+    });
+    return watcherInst;
+}
+
+async function removeDistTarget(srcFilePath, isDir) {
+    const target = toDistPath(srcFilePath);
+    // eslint-disable-next-line no-console
+    console.log(chalk.yellow(`${isDir ? "删除文件夹" : "删除文件"}：${srcFilePath} → ${target}`));
+    try {
+        await deleteAsync([target], { force: true });
+    } catch (err) {
+        // eslint-disable-next-line no-console
+        console.log(
+            chalk.red(`[watch] 同步删除失败（已忽略）：${err && err.message ? err.message : err}`)
+        );
+    }
+}
+
 function watcher(callback) {
     const addOrChange = { events: ["add", "change"] };
-    watch(filePath.wxmlPath, addOrChange, wxml);
-    watch(filePath.cssPath, addOrChange, wxss);
-    watch(filePath.jsPath, addOrChange, js);
-    watch(filePath.jsonPath, addOrChange, json);
-    watch(filePath.wxsPath, addOrChange, wxs);
-    watch("src/config/*.js", addOrChange, config);
+    safeWatch(filePath.wxmlPath, addOrChange, wxml);
+    safeWatch(filePath.cssPath, addOrChange, wxss);
+    safeWatch(filePath.jsPath, addOrChange, js);
+    safeWatch(filePath.jsonPath, addOrChange, json);
+    safeWatch(filePath.wxsPath, addOrChange, wxs);
+    safeWatch("src/config/*.js", addOrChange, config);
 
-    const srcPath = "src/**";
-
-    watch(srcPath).on("unlink", function delFile(filePathStr) {
-        // eslint-disable-next-line no-console
-        console.log(chalk.yellow(`删除文件：${filePathStr}`));
-        return deleteAsync([filePathStr.replace("src", DIST)]);
+    const deleteWatcher = safeWatch("src/**/*", {
+        events: ["unlink", "unlinkDir"],
+        ignoreInitial: true,
     });
 
-    watch(srcPath).on("unlinkDir", function delFile(filePathStr) {
-        // eslint-disable-next-line no-console
-        console.log(chalk.yellow(`删除文件夹：${filePathStr}`));
-        return deleteAsync([filePathStr.replace("src", DIST)]);
+    deleteWatcher.on("unlink", (filePathStr) => {
+        removeDistTarget(filePathStr, false);
+    });
+    deleteWatcher.on("unlinkDir", (filePathStr) => {
+        removeDistTarget(filePathStr, true);
     });
 
     const projectConfigJson = `${DIST}/project.config.json`;
 
-    watch(projectConfigJson, function syncProjectConfig() {
+    safeWatch(projectConfigJson, function syncProjectConfig() {
         const projectConfig = isProduction
             ? "online.config"
             : isStaging
-            ? "staging.config"
-            : "dev.config";
-        return src(projectConfigJson)
+              ? "staging.config"
+              : "dev.config";
+        return src(projectConfigJson, { allowEmpty: true })
+            .pipe(plumber(onError))
             .pipe(
                 rename({
                     basename: projectConfig,

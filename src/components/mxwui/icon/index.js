@@ -1,1 +1,7 @@
-Component({properties:{name:{type:String,value:""},color:{type:String,value:""},size:{type:String,value:"48"}}});
+Component({
+    properties: {
+        name: { type: String, value: "" },
+        color: { type: String, value: "" },
+        size: { type: String, value: "48" },
+    },
+});

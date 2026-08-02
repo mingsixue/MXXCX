@@ -84,10 +84,7 @@ Page({
                         label: id % 3 === 1 ? "热卖" : "",
                         price: 69 + (id % 5) * 10,
                         originPrice: `¥${129 + (id % 5) * 10}`,
-                        tags: [
-                            { text: "包邮" },
-                            { text: id % 2 ? "新品" : "满减" },
-                        ],
+                        tags: [{ text: "包邮" }, { text: id % 2 ? "新品" : "满减" }],
                         btnText: "立即购买",
                     });
                 }

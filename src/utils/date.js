@@ -56,10 +56,7 @@ const formatDate = (input, fmt = "yyyy-MM-dd HH:mm:ss") => {
             const matched = RegExp.$1;
             const val = map[key];
             if (key === "y+") {
-                result = result.replace(
-                    matched,
-                    `${val}`.substring(4 - matched.length)
-                );
+                result = result.replace(matched, `${val}`.substring(4 - matched.length));
             } else if (key === "t+") {
                 result = result.replace(matched, `${val}`.substring(0, matched.length));
             } else {
@@ -115,15 +112,7 @@ const isBetween = (time, start, end) => {
     return t >= +toDate(start) && t <= +toDate(end);
 };
 
-export {
-    toDate,
-    getTimestamp,
-    formatDate,
-    timestampToDate,
-    isBefore,
-    isAfter,
-    isBetween,
-};
+export { toDate, getTimestamp, formatDate, timestampToDate, isBefore, isAfter, isBetween };
 
 export default {
     toDate,

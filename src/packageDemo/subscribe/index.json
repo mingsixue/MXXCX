@@ -1,7 +1,7 @@
 {
-  "usingComponents": {
-    "mx-btn": "/components/mxwui/btn/index",
-    "mx-nav": "/components/mxwui/nav/index"
-  },
-  "navigationStyle": "custom"
+    "usingComponents": {
+        "mx-btn": "/components/mxwui/btn/index",
+        "mx-nav": "/components/mxwui/nav/index"
+    },
+    "navigationStyle": "custom"
 }

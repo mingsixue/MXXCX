@@ -1,1 +1,9 @@
-import{COLOR}from"../utils/common";Component({properties:{text:{type:String,value:""},textColor:{type:String,value:COLOR.THEME_COLOR},borderColor:{type:String,value:COLOR.THEME_COLOR},bgColor:{type:String,value:COLOR.WHITE_COLOR}}});
+import { COLOR } from "../utils/common";
+Component({
+    properties: {
+        text: { type: String, value: "" },
+        textColor: { type: String, value: COLOR.THEME_COLOR },
+        borderColor: { type: String, value: COLOR.THEME_COLOR },
+        bgColor: { type: String, value: COLOR.WHITE_COLOR },
+    },
+});

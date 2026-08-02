@@ -98,8 +98,8 @@ function md51(s) {
     }
     s = s.substring(i - 64);
     const tail = new Array(16).fill(0);
-    for (i = 0; i < s.length; i++) tail[i >> 2] |= s.charCodeAt(i) << (i % 4 << 3);
-    tail[i >> 2] |= 0x80 << (i % 4 << 3);
+    for (i = 0; i < s.length; i++) tail[i >> 2] |= s.charCodeAt(i) << ((i % 4) << 3);
+    tail[i >> 2] |= 0x80 << ((i % 4) << 3);
     if (i > 55) {
         md5cycle(state, tail);
         for (i = 0; i < 16; i++) tail[i] = 0;
@@ -122,7 +122,8 @@ function md5blk(s) {
 const hex_chr = "0123456789abcdef".split("");
 function rhex(n) {
     let s = "";
-    for (let j = 0; j < 4; j++) s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
+    for (let j = 0; j < 4; j++)
+        s += hex_chr[(n >> (j * 8 + 4)) & 0x0f] + hex_chr[(n >> (j * 8)) & 0x0f];
     return s;
 }
 function hex(x) {

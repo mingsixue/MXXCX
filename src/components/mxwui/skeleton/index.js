@@ -1,1 +1,89 @@
-import{createPulseController}from"./pulse";const SHAPE_LIST=["circle","square"],SIZE_LIST=["x-small","small","medium","large"];Component({options:{multipleSlots:!0},properties:{loading:{type:Boolean,value:!0},animate:{type:Boolean,value:!1},avatar:{type:Boolean,value:!1},title:{type:Boolean,value:!0},rows:{type:null,value:3},avatarSize:{type:String,value:"medium"},avatarShape:{type:String,value:"square"},customStyle:{type:String,value:""}},data:{showSkeleton:!0,showAvatar:!1,showTitle:!0,showParagraph:!0,rowList:[],avatarClass:"mx-skeleton-avatar-square mx-skeleton-avatar-medium",avatarStyle:"",rootStyle:"",pulseAni:null},observers:{"loading, animate, avatar, title, rows, avatarSize, avatarShape, customStyle":function(){this._sync()}},lifetimes:{attached(){this._pulse=createPulseController(this),this._sync()},detached(){this._pulse&&this._pulse.stop()}},methods:{_resolveShape:e=>SHAPE_LIST.indexOf(e)>=0?e:"square",_resolveSize(e){if(SIZE_LIST.indexOf(e)>=0)return{preset:e,style:""};if("string"==typeof e&&e.trim()){const t=e.trim();return{preset:"",style:`width:${t};height:${t};`}}return{preset:"medium",style:""}},_resolveRows(e){const t=Number(e);return Number.isNaN(t)||t<=0?0:Math.min(Math.floor(t),20)},_sync(){const{loading:e,animate:t,avatar:a,title:s,rows:l,avatarSize:r,avatarShape:o,customStyle:i}=this.data,n=this._resolveRows(l),u=[];for(let e=0;e<n;e++)u.push({index:e,last:e===n-1&&n>1});const h=this._resolveSize(r),p=[`mx-skeleton-avatar-${this._resolveShape(o)}`,h.preset?`mx-skeleton-avatar-${h.preset}`:""].filter(Boolean).join(" ");this.setData({showSkeleton:!1!==e,showAvatar:!!a,showTitle:!1!==s,showParagraph:n>0,rowList:u,avatarClass:p,avatarStyle:h.style,rootStyle:i||""}),this._pulse||(this._pulse=createPulseController(this)),this._pulse.sync(!!t,!1!==e)}}});
+import { createPulseController } from "./pulse";
+const SHAPE_LIST = ["circle", "square"],
+    SIZE_LIST = ["x-small", "small", "medium", "large"];
+Component({
+    options: { multipleSlots: !0 },
+    properties: {
+        loading: { type: Boolean, value: !0 },
+        animate: { type: Boolean, value: !1 },
+        avatar: { type: Boolean, value: !1 },
+        title: { type: Boolean, value: !0 },
+        rows: { type: null, value: 3 },
+        avatarSize: { type: String, value: "medium" },
+        avatarShape: { type: String, value: "square" },
+        customStyle: { type: String, value: "" },
+    },
+    data: {
+        showSkeleton: !0,
+        showAvatar: !1,
+        showTitle: !0,
+        showParagraph: !0,
+        rowList: [],
+        avatarClass: "mx-skeleton-avatar-square mx-skeleton-avatar-medium",
+        avatarStyle: "",
+        rootStyle: "",
+        pulseAni: null,
+    },
+    observers: {
+        "loading, animate, avatar, title, rows, avatarSize, avatarShape, customStyle": function () {
+            this._sync();
+        },
+    },
+    lifetimes: {
+        attached() {
+            ((this._pulse = createPulseController(this)), this._sync());
+        },
+        detached() {
+            this._pulse && this._pulse.stop();
+        },
+    },
+    methods: {
+        _resolveShape: (e) => (SHAPE_LIST.indexOf(e) >= 0 ? e : "square"),
+        _resolveSize(e) {
+            if (SIZE_LIST.indexOf(e) >= 0) return { preset: e, style: "" };
+            if ("string" == typeof e && e.trim()) {
+                const t = e.trim();
+                return { preset: "", style: `width:${t};height:${t};` };
+            }
+            return { preset: "medium", style: "" };
+        },
+        _resolveRows(e) {
+            const t = Number(e);
+            return Number.isNaN(t) || t <= 0 ? 0 : Math.min(Math.floor(t), 20);
+        },
+        _sync() {
+            const {
+                    loading: e,
+                    animate: t,
+                    avatar: a,
+                    title: s,
+                    rows: l,
+                    avatarSize: r,
+                    avatarShape: o,
+                    customStyle: i,
+                } = this.data,
+                n = this._resolveRows(l),
+                u = [];
+            for (let e = 0; e < n; e++) u.push({ index: e, last: e === n - 1 && n > 1 });
+            const h = this._resolveSize(r),
+                p = [
+                    `mx-skeleton-avatar-${this._resolveShape(o)}`,
+                    h.preset ? `mx-skeleton-avatar-${h.preset}` : "",
+                ]
+                    .filter(Boolean)
+                    .join(" ");
+            (this.setData({
+                showSkeleton: !1 !== e,
+                showAvatar: !!a,
+                showTitle: !1 !== s,
+                showParagraph: n > 0,
+                rowList: u,
+                avatarClass: p,
+                avatarStyle: h.style,
+                rootStyle: i || "",
+            }),
+                this._pulse || (this._pulse = createPulseController(this)),
+                this._pulse.sync(!!t, !1 !== e));
+        },
+    },
+});

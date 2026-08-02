@@ -43,20 +43,10 @@ const getNumberAccuracy = (a, b, operate) => {
 
     switch (operate) {
         case "add":
-            result =
-                t1 === t2
-                    ? n1 + n2
-                    : t1 > t2
-                    ? n1 + n2 * (t1 / t2)
-                    : n1 * (t2 / t1) + n2;
+            result = t1 === t2 ? n1 + n2 : t1 > t2 ? n1 + n2 * (t1 / t2) : n1 * (t2 / t1) + n2;
             return result / max;
         case "subtract":
-            result =
-                t1 === t2
-                    ? n1 - n2
-                    : t1 > t2
-                    ? n1 - n2 * (t1 / t2)
-                    : n1 * (t2 / t1) - n2;
+            result = t1 === t2 ? n1 - n2 : t1 > t2 ? n1 - n2 * (t1 / t2) : n1 * (t2 / t1) - n2;
             return result / max;
         case "multiply":
             return (n1 * n2) / (t1 * t2);
@@ -96,13 +86,7 @@ const formatPrice = (num, digits = 2) => {
     return decPart !== undefined ? `${withComma}.${decPart}` : withComma;
 };
 
-export {
-    getNumberAccuracy,
-    toFixedFloor,
-    formatPrice,
-    padStart,
-    padEnd,
-};
+export { getNumberAccuracy, toFixedFloor, formatPrice, padStart, padEnd };
 
 export default {
     getNumberAccuracy,

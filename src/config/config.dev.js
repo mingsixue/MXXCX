@@ -16,7 +16,7 @@ const CONFIG = {
     ENABLE_DEBUG: true,
     FORCE_UPDATE_URL: "",
     REPORT_URL: "",
-    MINI_PROGRAM_APPIDS: ['wxd4104f02cafc8d4d'],
+    MINI_PROGRAM_APPIDS: ["wxd4104f02cafc8d4d"],
     // 小程序限制 Cookie 时可改为 X-Env
     ENV_COOKIE_HEADER: "Cookie",
     ENV_LIST: [

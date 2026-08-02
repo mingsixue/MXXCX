@@ -15,14 +15,12 @@ Page({
     },
 
     handleLocationAuth() {
-        MX.authorizeBatch(["scope.userLocation"], { openSettingOnFail: true }).then(
-            (r) => {
-                wx.showToast({
-                    title: r["scope.userLocation"] ? "定位已授权" : "未授权",
-                    icon: "none",
-                });
-            }
-        );
+        MX.authorizeBatch(["scope.userLocation"], { openSettingOnFail: true }).then((r) => {
+            wx.showToast({
+                title: r["scope.userLocation"] ? "定位已授权" : "未授权",
+                icon: "none",
+            });
+        });
     },
 
     onChooseAvatar(e) {

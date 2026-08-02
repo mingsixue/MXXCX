@@ -1,1 +1,10 @@
-{"component":true,"usingComponents":{"mx-radio":"../radio/index","mx-list-basic":"../list-basic/index","mx-icon":"../icon/index","form-label":"../components/form-label/index","form-desc":"../components/form-desc/index"}}
+{
+    "component": true,
+    "usingComponents": {
+        "mx-radio": "../radio/index",
+        "mx-list-basic": "../list-basic/index",
+        "mx-icon": "../icon/index",
+        "form-label": "../components/form-label/index",
+        "form-desc": "../components/form-desc/index"
+    }
+}

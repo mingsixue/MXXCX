@@ -16,7 +16,7 @@ const CONFIG = {
     ENABLE_DEBUG: true,
     FORCE_UPDATE_URL: "",
     REPORT_URL: "",
-    MINI_PROGRAM_APPIDS: ['wxd4104f02cafc8d4d'],
+    MINI_PROGRAM_APPIDS: ["wxd4104f02cafc8d4d"],
     ENV_COOKIE_HEADER: "Cookie",
     ENV_LIST: [
         {

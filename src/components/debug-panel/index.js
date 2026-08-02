@@ -4,12 +4,7 @@ import { getRequestLogs, clearRequestLogs } from "@utils/request";
 import { getCurrentPageInfo } from "@utils/page";
 import { getSafeArea, getSystemInfo } from "@utils/system";
 import { formatDate } from "@utils/date";
-import {
-    getEnvGroups,
-    getSelectedEnv,
-    initRuntimeEnv,
-    setSelectedEnv,
-} from "@utils/env";
+import { getEnvGroups, getSelectedEnv, initRuntimeEnv, setSelectedEnv } from "@utils/env";
 import MX from "@utils/index";
 
 const DOT_POS_KEY = "_debug_dot_pos";
@@ -224,9 +219,7 @@ Component({
             const info = getCurrentPageInfo();
             const options = info.options || {};
             const keys = Object.keys(options);
-            const query = keys.length
-                ? keys.map((k) => `${k}=${options[k]}`).join("&")
-                : "-";
+            const query = keys.length ? keys.map((k) => `${k}=${options[k]}`).join("&") : "-";
             this.setData({
                 path: info.route || "",
                 query,
@@ -270,9 +263,7 @@ Component({
                     key,
                     valueText,
                     valuePreview:
-                        valueText.length > 120
-                            ? `${valueText.slice(0, 120)}…`
-                            : valueText,
+                        valueText.length > 120 ? `${valueText.slice(0, 120)}…` : valueText,
                     expireText,
                     expired: !!item.expired,
                 };
@@ -507,6 +498,5 @@ Component({
             }
             this.pickFromList(group.items);
         },
-
     },
 });

@@ -1,10 +1,10 @@
 {
-  "usingComponents": {
-    "mx-btn": "/components/mxwui/btn/index",
-    "mx-confirm": "/components/mxwui/confirm/index",
-    "mx-dialog": "/components/mxwui/dialog/index",
-    "mx-protocol-dialog": "/components/mxwui/protocol-dialog/index",
-    "mx-nav": "/components/mxwui/nav/index"
-  },
-  "navigationStyle": "custom"
+    "usingComponents": {
+        "mx-btn": "/components/mxwui/btn/index",
+        "mx-confirm": "/components/mxwui/confirm/index",
+        "mx-dialog": "/components/mxwui/dialog/index",
+        "mx-protocol-dialog": "/components/mxwui/protocol-dialog/index",
+        "mx-nav": "/components/mxwui/nav/index"
+    },
+    "navigationStyle": "custom"
 }

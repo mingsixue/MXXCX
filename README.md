@@ -31,11 +31,11 @@ yarn upload
 
 ## 配置文件
 
-| 环境 | 业务配置 | 工程配置 |
-|------|----------|----------|
-| 开发 | `src/config/config.dev.js` | `dev.config.json` |
+| 环境      | 业务配置                       | 工程配置              |
+| --------- | ------------------------------ | --------------------- |
+| 开发      | `src/config/config.dev.js`     | `dev.config.json`     |
 | 测试/灰度 | `src/config/config.staging.js` | `staging.config.json` |
-| 生产 | `src/config/config.js` | `online.config.json` |
+| 生产      | `src/config/config.js`         | `online.config.json`  |
 
 构建时自动注入 `VERSION`（`package.json version` + 时间戳），如 `1.0.0.202608011430`。
 
@@ -49,10 +49,10 @@ MXWUI 位于 `src/components/mxwui`。**页面中使用组件时优先使用 mxw
 
 ```json
 {
-  "usingComponents": {
-    "mx-btn": "/components/mxwui/btn/index",
-    "mx-list-basic": "/components/mxwui/list-basic/index"
-  }
+    "usingComponents": {
+        "mx-btn": "/components/mxwui/btn/index",
+        "mx-list-basic": "/components/mxwui/list-basic/index"
+    }
 }
 ```
 

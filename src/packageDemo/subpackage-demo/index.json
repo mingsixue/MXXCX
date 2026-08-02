@@ -1,10 +1,10 @@
 {
-  "usingComponents": {
-    "mx-btn": "/components/mxwui/btn/index",
-    "mx-list-basic": "/components/mxwui/list-basic/index",
-    "mx-empty": "/components/mxwui/empty/index",
-    "mx-safe-area": "/components/mxwui/safe-area/index",
-    "mx-nav": "/components/mxwui/nav/index"
-  },
-  "navigationStyle": "custom"
+    "usingComponents": {
+        "mx-btn": "/components/mxwui/btn/index",
+        "mx-list-basic": "/components/mxwui/list-basic/index",
+        "mx-empty": "/components/mxwui/empty/index",
+        "mx-safe-area": "/components/mxwui/safe-area/index",
+        "mx-nav": "/components/mxwui/nav/index"
+    },
+    "navigationStyle": "custom"
 }

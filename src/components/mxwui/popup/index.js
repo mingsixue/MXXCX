@@ -1,1 +1,11 @@
-import createDialogBehavior from"../behaviors/dialog";Component({behaviors:[createDialogBehavior("popup_close")],properties:{type:{type:String,value:"right"},width:{type:String,value:"80vw"}},methods:{handleMask(){this.data.isCloseMask&&(this.setData({visible:!1}),this.triggerEvent("popup_close"))}}});
+import createDialogBehavior from "../behaviors/dialog";
+Component({
+    behaviors: [createDialogBehavior("popup_close")],
+    properties: { type: { type: String, value: "right" }, width: { type: String, value: "80vw" } },
+    methods: {
+        handleMask() {
+            this.data.isCloseMask &&
+                (this.setData({ visible: !1 }), this.triggerEvent("popup_close"));
+        },
+    },
+});

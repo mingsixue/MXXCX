@@ -59,8 +59,7 @@ const getSelectedEnv = () => {
     const list = getEnvList();
     const preferType = getDefaultType();
     const fallback = TYPE_META[preferType] || TYPE_META.test;
-    const defaultCookie =
-        (config.HEADER && config.HEADER.Cookie) || config.ENV_COOKIE || "";
+    const defaultCookie = (config.HEADER && config.HEADER.Cookie) || config.ENV_COOKIE || "";
 
     if (!list.length) {
         return {
@@ -83,9 +82,7 @@ const getSelectedEnv = () => {
             store.remove(LEGACY_STORAGE_KEY);
         }
     }
-    const matched =
-        (savedId && list.find((item) => item.id === savedId)) ||
-        pickDefaultEnv(list);
+    const matched = (savedId && list.find((item) => item.id === savedId)) || pickDefaultEnv(list);
 
     const type = matched.type || fallback.type;
     const meta = TYPE_META[type] || fallback;

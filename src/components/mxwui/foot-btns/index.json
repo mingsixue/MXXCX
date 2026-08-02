@@ -1,1 +1,8 @@
-{"component":true,"usingComponents":{"mx-icon":"../icon/index","mx-fixed-foot":"../fixed-foot/index","mx-btn":"../btn/index"}}
+{
+    "component": true,
+    "usingComponents": {
+        "mx-icon": "../icon/index",
+        "mx-fixed-foot": "../fixed-foot/index",
+        "mx-btn": "../btn/index"
+    }
+}

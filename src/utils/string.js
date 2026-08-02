@@ -38,8 +38,7 @@ const padEnd = (val, len = 2, ch = "0") => {
  * @returns {string}
  */
 const randomString = (len = 16) => {
-    const chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let result = "";
     for (let i = 0; i < len; i++) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));

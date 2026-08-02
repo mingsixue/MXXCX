@@ -1,1 +1,56 @@
-import{createPulseController}from"../pulse";const SHAPE_LIST=["circle","square"],SIZE_LIST=["x-small","small","medium","large"];Component({properties:{loading:{type:Boolean,value:!0},animate:{type:Boolean,value:!1},shape:{type:String,value:"square"},size:{type:String,value:"medium"},customStyle:{type:String,value:""}},data:{showSkeleton:!0,sizeClass:"mx-skeleton-avatar-medium",shapeClass:"mx-skeleton-avatar-square",sizeStyle:"",pulseAni:null},observers:{"loading, animate, shape, size, customStyle":function(){this._sync()}},lifetimes:{attached(){this._pulse=createPulseController(this),this._sync()},detached(){this._pulse&&this._pulse.stop()}},methods:{_resolveShape:e=>SHAPE_LIST.indexOf(e)>=0?e:"square",_resolveSize(e){if(SIZE_LIST.indexOf(e)>=0)return{preset:e,style:""};if("string"==typeof e&&e.trim()){const s=e.trim();return{preset:"",style:`width:${s};height:${s};`}}return{preset:"medium",style:""}},_sync(){const{loading:e,animate:s,shape:t,size:l,customStyle:a}=this.data,i=!1!==e,r=this._resolveSize(l);this.setData({showSkeleton:i,sizeClass:r.preset?`mx-skeleton-avatar-${r.preset}`:"",shapeClass:`mx-skeleton-avatar-${this._resolveShape(t)}`,sizeStyle:`${r.style}${a||""}`}),this._pulse||(this._pulse=createPulseController(this)),this._pulse.sync(!!s,i)}}});
+import { createPulseController } from "../pulse";
+const SHAPE_LIST = ["circle", "square"],
+    SIZE_LIST = ["x-small", "small", "medium", "large"];
+Component({
+    properties: {
+        loading: { type: Boolean, value: !0 },
+        animate: { type: Boolean, value: !1 },
+        shape: { type: String, value: "square" },
+        size: { type: String, value: "medium" },
+        customStyle: { type: String, value: "" },
+    },
+    data: {
+        showSkeleton: !0,
+        sizeClass: "mx-skeleton-avatar-medium",
+        shapeClass: "mx-skeleton-avatar-square",
+        sizeStyle: "",
+        pulseAni: null,
+    },
+    observers: {
+        "loading, animate, shape, size, customStyle": function () {
+            this._sync();
+        },
+    },
+    lifetimes: {
+        attached() {
+            ((this._pulse = createPulseController(this)), this._sync());
+        },
+        detached() {
+            this._pulse && this._pulse.stop();
+        },
+    },
+    methods: {
+        _resolveShape: (e) => (SHAPE_LIST.indexOf(e) >= 0 ? e : "square"),
+        _resolveSize(e) {
+            if (SIZE_LIST.indexOf(e) >= 0) return { preset: e, style: "" };
+            if ("string" == typeof e && e.trim()) {
+                const s = e.trim();
+                return { preset: "", style: `width:${s};height:${s};` };
+            }
+            return { preset: "medium", style: "" };
+        },
+        _sync() {
+            const { loading: e, animate: s, shape: t, size: l, customStyle: a } = this.data,
+                i = !1 !== e,
+                r = this._resolveSize(l);
+            (this.setData({
+                showSkeleton: i,
+                sizeClass: r.preset ? `mx-skeleton-avatar-${r.preset}` : "",
+                shapeClass: `mx-skeleton-avatar-${this._resolveShape(t)}`,
+                sizeStyle: `${r.style}${a || ""}`,
+            }),
+                this._pulse || (this._pulse = createPulseController(this)),
+                this._pulse.sync(!!s, i));
+        },
+    },
+});
