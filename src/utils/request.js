@@ -245,7 +245,12 @@ const request = (options = {}) => {
                             return;
                         }
 
-                        if (message == "jwt expired" || statusCode == "401" || statusCode === 401) {
+                        if (
+                            message == "jwt expired" ||
+                            message == "成员不存在" ||
+                            statusCode == "401" ||
+                            statusCode === 401
+                        ) {
                             clearAuth();
                             const handled =
                                 options.onError &&
