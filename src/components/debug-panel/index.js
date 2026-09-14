@@ -21,6 +21,25 @@ const stringifyCacheValue = (value) => {
     }
 };
 
+const stringifyPretty = (value) => {
+    if (value === undefined) return "undefined";
+    if (value === null) return "null";
+    if (typeof value === "string") return value;
+    try {
+        return JSON.stringify(value, null, 2);
+    } catch (e) {
+        return String(value);
+    }
+};
+
+const formatRequestLogs = (logs = []) =>
+    logs.map((item) => ({
+        ...item,
+        dataText: stringifyPretty(item.data),
+        responseText: stringifyPretty(item.response),
+        headerText: item.header != null ? stringifyPretty(item.header) : "-",
+    }));
+
 Component({
     data: {
         enabled: false,
@@ -37,6 +56,7 @@ Component({
         path: "",
         query: "",
         logs: [],
+        expandedLogIndex: -1,
         storageItems: [],
         systemText: "",
         tabs: [
@@ -256,7 +276,7 @@ Component({
                 if (item.expireAt > 0) {
                     expireText = item.expired
                         ? "已过期"
-                        : formatDate(item.expireAt * 1000, "yyyy-MM-dd HH:mm:ss");
+                        : formatDate(item.expireAt * 1000, "yyyy/MM/dd\nHH:mm:ss");
                 }
                 const valueText = stringifyCacheValue(item.value);
                 return {
@@ -273,8 +293,12 @@ Component({
         refreshAll() {
             this.refreshPath();
             this.syncEnvView();
+            const logs = formatRequestLogs(getRequestLogs());
+            let { expandedLogIndex } = this.data;
+            if (expandedLogIndex >= logs.length) expandedLogIndex = -1;
             this.setData({
-                logs: getRequestLogs(),
+                logs,
+                expandedLogIndex,
                 storageItems: this.buildStorageItems(),
                 systemText: JSON.stringify(getSystemInfo(), null, 2),
                 version: config.VERSION,
@@ -365,15 +389,38 @@ Component({
             this.refreshAll();
         },
 
+        toggleLogItem(e) {
+            const { index } = e.currentTarget.dataset;
+            const next = Number(index);
+            this.setData({
+                expandedLogIndex: this.data.expandedLogIndex === next ? -1 : next,
+            });
+        },
+
         copyLogItem(e) {
             const { index } = e.currentTarget.dataset;
             const item = this.data.logs[index];
-            wx.setClipboardData({ data: JSON.stringify(item, null, 2) });
+            if (!item) {
+                wx.showToast({ title: "无请求信息", icon: "none" });
+                return;
+            }
+            const text = [
+                `域名: ${item.apiHost || "-"}`,
+                `接口名称: ${item.url || "-"}`,
+                `方法: ${item.method || "-"}`,
+                `返回码: ${item.statusCode != null ? item.statusCode : "-"}`,
+                `耗时: ${item.duration != null ? item.duration : "-"}ms`,
+                `环境: ${item.envName || "-"}`,
+                `请求头:\n${item.headerText || "-"}`,
+                `请求参数:\n${item.dataText || "-"}`,
+                `返回值:\n${item.responseText || "-"}`,
+            ].join("\n\n");
+            wx.setClipboardData({ data: text });
         },
 
         clearLogs() {
             clearRequestLogs();
-            this.setData({ logs: [] });
+            this.setData({ logs: [], expandedLogIndex: -1 });
         },
 
         removeStorageKey(e) {

@@ -7,7 +7,7 @@ Component({
         descColor: { type: String, value: COLOR.PLACEHOLDER_COLOR },
         iconName: { type: String, value: "empty" },
         iconColor: { type: String, value: COLOR.PLACEHOLDER_COLOR },
-        iconSize: { type: Number, value: 200 },
+        iconSize: { type: Number, value: 120 },
         iconUrl: { type: String, value: "" },
         mainBtnText: { type: String, value: "" },
         mainBtnType: { type: String, value: "primary" },

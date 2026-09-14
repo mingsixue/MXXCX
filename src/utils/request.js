@@ -7,32 +7,101 @@ import { clearUser, getToken } from "./user";
 import { getApiHost, getEnvHeaders, getSelectedEnv } from "./env";
 
 const pendingMap = new Map();
-let requestLogs = [];
+const REQUEST_LOG_KEY = "_debug_request_logs";
+const MAX_REQUEST_LOGS = 50;
+
+/** @type {object[]|null} */
+let requestLogs = null;
+/** @type {string} YYYY-MM-DD */
+let requestLogsDay = "";
+
+const todayKey = () => {
+    const d = new Date();
+    const m = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    return `${d.getFullYear()}-${m}-${day}`;
+};
+
+const syncRequestLogsGlobal = () => {
+    try {
+        const app = getApp();
+        if (app && app.globalData) {
+            app.globalData.requestLogs = requestLogs || [];
+        }
+    } catch (e) {
+        // ignore
+    }
+};
+
+const persistRequestLogs = () => {
+    if (!config.ENABLE_DEBUG) return;
+    try {
+        wx.setStorageSync(REQUEST_LOG_KEY, {
+            day: requestLogsDay || todayKey(),
+            list: requestLogs || [],
+        });
+    } catch (e) {
+        // 存储配额满等忽略，内存日志仍可用
+    }
+};
 
 /**
- * 获取最近请求日志（供 Debug 小绿点使用）
+ * 加载当天请求日志；跨天则清空
+ */
+const ensureRequestLogs = () => {
+    const day = todayKey();
+    if (requestLogs !== null && requestLogsDay === day) {
+        return requestLogs;
+    }
+
+    let list = [];
+    if (config.ENABLE_DEBUG) {
+        try {
+            const saved = wx.getStorageSync(REQUEST_LOG_KEY);
+            if (saved && saved.day === day && Array.isArray(saved.list)) {
+                list = saved.list;
+            } else if (saved) {
+                wx.removeStorageSync(REQUEST_LOG_KEY);
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    requestLogs = list;
+    requestLogsDay = day;
+    syncRequestLogsGlobal();
+    return requestLogs;
+};
+
+/**
+ * 获取最近请求日志（供 Debug 小绿点使用，仅当天）
  * @returns {object[]}
  */
-const getRequestLogs = () => requestLogs.slice();
+const getRequestLogs = () => ensureRequestLogs().slice();
 
 /**
  * 清空请求日志
  */
 const clearRequestLogs = () => {
     requestLogs = [];
+    requestLogsDay = todayKey();
+    syncRequestLogsGlobal();
+    if (config.ENABLE_DEBUG) {
+        try {
+            wx.removeStorageSync(REQUEST_LOG_KEY);
+        } catch (e) {
+            // ignore
+        }
+    }
 };
 
 const pushLog = (item) => {
+    ensureRequestLogs();
     requestLogs.unshift(item);
-    if (requestLogs.length > 50) requestLogs.length = 50;
-    try {
-        const app = getApp();
-        if (app && app.globalData) {
-            app.globalData.requestLogs = requestLogs;
-        }
-    } catch (e) {
-        // ignore
-    }
+    if (requestLogs.length > MAX_REQUEST_LOGS) requestLogs.length = MAX_REQUEST_LOGS;
+    syncRequestLogsGlobal();
+    persistRequestLogs();
 };
 
 const clearAuth = () => {
@@ -90,15 +159,16 @@ const request = (options = {}) => {
 
     const promise = new Promise((resolve, reject) => {
         const runtimeEnv = getSelectedEnv();
+        const requestHeader = {
+            "content-type": "application/json",
+            ...(userToken ? { Authorization: userToken } : {}),
+            ...getEnvHeaders(),
+            ...(options.header || {}),
+        };
         task = wx.request({
             url: `${getApiHost()}${options.url}`,
             data: options.data || {},
-            header: {
-                "content-type": "application/json",
-                ...(userToken ? { Authorization: userToken } : {}),
-                ...getEnvHeaders(),
-                ...(options.header || {}),
-            },
+            header: requestHeader,
             timeout: options.timeout || 10000,
             method: (options.method || "GET").toUpperCase(),
             dataType: "json",
@@ -116,6 +186,7 @@ const request = (options = {}) => {
                     time: Date.now(),
                     data: options.data,
                     response: body,
+                    header: requestHeader,
                     apiHost: runtimeEnv.APIHOST,
                     envName: runtimeEnv.name,
                     cookie: runtimeEnv.cookie,
@@ -172,6 +243,10 @@ const request = (options = {}) => {
                     time: Date.now(),
                     data: options.data,
                     response: err,
+                    header: requestHeader,
+                    apiHost: runtimeEnv.APIHOST,
+                    envName: runtimeEnv.name,
+                    cookie: runtimeEnv.cookie,
                 });
                 const handled =
                     options.onError &&

@@ -101,7 +101,7 @@ MX.post("/api/demo", { id: 1 });
 
 ## 小绿点 Debug
 
-`ENABLE_DEBUG=true` 时全局开启（`app.json` 已注册，各页面挂载 `<debug-panel />`），所有页面可见。支持路径复制、跳转、清缓存、请求/缓存记录、扫一扫、关闭等。
+`ENABLE_DEBUG=true` 时全局开启（`app.json` 已注册，各页面挂载 `<debug-panel />`），所有页面可见。支持路径复制、跳转、清缓存、请求/缓存记录、扫一扫、关闭等。请求日志仅保留当天（本地缓存跨天自动清空）。
 
 **后端环境切换**：在 `config.*.js` 的 `ENV_LIST` 按 `type`（`test` / `gray` / `online`）配置，同一类型可写多套（不同 `APIHOST` + `cookie`）。小绿点主面板先点类型，再选具体环境；请求自动带上对应域名与 Cookie。
 
