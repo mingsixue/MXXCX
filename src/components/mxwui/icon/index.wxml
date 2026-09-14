@@ -1,1 +1,4 @@
-<view class="mx-font icon mx_{{name}}" style="{{color ? 'color: '+color+';' : ''}} font-size: {{size}}rpx;" /> 
+<view
+    class="mx-font icon mx_{{name}}"
+    style="font-size: {{size}}rpx;{{stroke ? ('color: transparent; -webkit-text-stroke: ' + stroke + ' ' + (color || '#A02731') + ';') : (color ? ('color: ' + color + ';') : '')}}"
+/>

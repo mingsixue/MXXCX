@@ -1,0 +1,10 @@
+{
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+        "mx-empty": "/components/mxwui/empty/index",
+        "mx-menu": "/components/mxwui/menu/index",
+        "mx-nav": "/components/mxwui/nav/index"
+    },
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "white"
+}

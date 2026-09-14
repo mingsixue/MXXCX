@@ -1,5 +1,8 @@
 import { COLOR } from "../../utils/common";
 Component({
+    options: {
+        addGlobalClass: true,
+    },
     properties: {
         horizontal: { type: Boolean, value: !1 },
         leftWidth: { type: Number, value: "" },

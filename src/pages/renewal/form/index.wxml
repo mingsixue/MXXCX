@@ -1,0 +1,90 @@
+<mx-nav theme="light" title="{{title}}" bgColor="#f5f6f8" />
+
+<view class="form-page" wx:if="{{!loading}}">
+    <view class="form-panel">
+        <mx-input
+            styleType="horizontal"
+            label="事项名称"
+            required="{{true}}"
+            placeholder="请输入事项名称"
+            value="{{name}}"
+            bind:input_change="onNameChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="date"
+            label="到期时间"
+            required="{{true}}"
+            date="{{endDate}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onEndDateChange"
+        />
+        <mx-input
+            styleType="horizontal"
+            label="预计价格"
+            placeholder="选填"
+            type="digit"
+            value="{{price}}"
+            bind:input_change="onPriceChange"
+        />
+        <mx-input
+            styleType="horizontal"
+            label="续费周期"
+            placeholder="如：一年 / 月付"
+            value="{{cycle}}"
+            bind:input_change="onCycleChange"
+        />
+        <mx-list-picker
+            wx:if="{{!affiliationLocked}}"
+            styleType="horizontal"
+            mode="selector"
+            label="归属"
+            required="{{true}}"
+            options="{{affiliationOptions}}"
+            rangeKey="label"
+            index="{{affiliationIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onAffiliationChange"
+        />
+        <mx-input
+            wx:if="{{affiliationLocked}}"
+            styleType="horizontal"
+            label="归属"
+            value="娟"
+            disabled="{{true}}"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="是否续费"
+            options="{{isRenewalOptions}}"
+            rangeKey="label"
+            index="{{isRenewalIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            showLine="{{false}}"
+            bind:list_picker_change="onIsRenewalChange"
+        />
+    </view>
+
+    <view class="form-panel">
+        <mx-textarea
+            label="备注"
+            placeholder="选填"
+            value="{{remark}}"
+            bind:textarea_change="onRemarkChange"
+        />
+    </view>
+
+    <view class="form-foot">
+        <mx-btn type="primary" width="686rpx" loading="{{submitting}}" bind:tap="handleSubmit">
+            {{isEdit ? '保存' : '提交'}}
+        </mx-btn>
+        <mx-safe-area />
+    </view>
+</view>
+
+<view class="form-tip" wx:if="{{loading}}">加载中...</view>
+<debug-panel />

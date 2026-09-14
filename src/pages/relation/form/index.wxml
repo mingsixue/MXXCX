@@ -1,0 +1,267 @@
+<mx-nav theme="light" title="{{title}}" bgColor="#f5f6f8" />
+
+<view class="form-page" wx:if="{{!loading}}">
+    <view class="form-panel">
+        <view class="form-section-title">基本信息</view>
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="姓名" required="{{true}}" placeholder="请输入姓名" value="{{name}}" bind:input_change="onNameChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="小名" placeholder="选填" value="{{smallName}}" bind:input_change="onSmallNameChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="曾用名" placeholder="选填" value="{{formerName}}" bind:input_change="onFormerNameChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="绰号" placeholder="选填" value="{{sobriquet}}" bind:input_change="onSobriquetChange" />
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="selector" label="性别" options="{{genderOptions}}" rangeKey="label" index="{{genderIndex}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onGenderChange" />
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="selector" label="关系" options="{{typeOptions}}" rangeKey="label" index="{{typeIndex}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onTypeChange" />
+        <mx-list-picker
+            wx:if="{{!affiliationLocked}}"
+            styleType="horizontal"
+            leftWidth="{{180}}"
+            mode="selector"
+            label="归属"
+            required="{{true}}"
+            options="{{affiliationOptions}}"
+            rangeKey="label"
+            index="{{affiliationIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onAffiliationChange"
+        />
+        <mx-input
+            wx:if="{{affiliationLocked}}"
+            styleType="horizontal"
+            leftWidth="{{180}}"
+            label="归属"
+            value="娟"
+            disabled="{{true}}"
+        />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="民族" placeholder="选填" value="{{nation}}" bind:input_change="onNationChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="出生年份" placeholder="如 1990" type="number" value="{{year}}" bind:input_change="onYearChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="籍贯" placeholder="选填" value="{{nativePlace}}" bind:input_change="onNativePlaceChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="籍贯地址" placeholder="选填" value="{{nativePlaceAddress}}" bind:input_change="onNativePlaceAddressChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="祖籍" placeholder="选填" value="{{ancestralHome}}" bind:input_change="onAncestralHomeChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="定居地" placeholder="选填" value="{{settlement}}" bind:input_change="onSettlementChange" />
+        <mx-textarea label="住址" placeholder="选填" value="{{address}}" bind:textarea_change="onAddressChange" />
+        <mx-textarea label="兴趣爱好" placeholder="选填" value="{{interests}}" bind:textarea_change="onInterestsChange" />
+        <view class="select-block">
+            <view class="select-label">用户标签</view>
+            <view class="chip-list" wx:if="{{selectedTags.length}}">
+                <view
+                    class="chip chip--on chip--removable"
+                    wx:for="{{selectedTags}}"
+                    wx:key="id"
+                    data-id="{{item.id}}"
+                    bindtap="handleToggleTag"
+                >
+                    <text>{{item.name}}</text>
+                    <text class="chip-x">×</text>
+                </view>
+            </view>
+            <view class="select-empty" wx:else>未选择标签</view>
+            <view
+                class="tag-entry"
+                hover-class="tag-entry--hover"
+                bindtap="handleOpenTagPopup"
+            >
+                <text class="tag-entry-text">{{allTags.length ? '选择标签' : '暂无标签可选'}}</text>
+                <text class="tag-entry-meta" wx:if="{{allTags.length}}">已选 {{selectedTagIds.length}} 个</text>
+            </view>
+        </view>
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">生卒信息</view>
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="date" label="出生日期" date="{{dateOfBirth}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onDateOfBirthChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="阳历生日" placeholder="选填" value="{{birthday}}" bind:input_change="onBirthdayChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="农历生日" placeholder="选填" value="{{lunarBirthday}}" bind:input_change="onLunarBirthdayChange" />
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="selector" label="星座" options="{{constellationOptions}}" rangeKey="label" index="{{constellationIndex}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onConstellationChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="生肖" placeholder="选填" value="{{chineseZodiac}}" maxLength="{{2}}" bind:input_change="onChineseZodiacChange" />
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="date" label="死亡日期" date="{{dieDay}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onDieDayChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="死亡原因" placeholder="选填" value="{{dieReason}}" bind:input_change="onDieReasonChange" showLine="{{false}}" />
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">联系信息</view>
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="手机" type="number" placeholder="选填" value="{{phone}}" maxLength="{{11}}" bind:input_change="onPhoneChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="微信" placeholder="选填" value="{{wechat}}" bind:input_change="onWechatChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="QQ" type="number" placeholder="选填" value="{{qq}}" bind:input_change="onQqChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="邮箱" placeholder="选填" value="{{email}}" bind:input_change="onEmailChange" showLine="{{false}}" />
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">家庭信息</view>
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="selector" label="婚姻" options="{{marriageOptions}}" rangeKey="label" index="{{marriageIndex}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onMarriageChange" />
+        <mx-textarea label="配偶" placeholder="选填" value="{{spouse}}" bind:textarea_change="onSpouseChange" />
+        <mx-textarea label="子女" placeholder="选填" value="{{children}}" bind:textarea_change="onChildrenChange" />
+        <mx-textarea label="父母" placeholder="选填" value="{{parents}}" bind:textarea_change="onParentsChange" />
+        <mx-textarea label="家庭" placeholder="选填" value="{{family}}" bind:textarea_change="onFamilyChange" />
+        <view class="select-block">
+            <view class="select-label">关联人</view>
+            <view class="chip-list" wx:if="{{affiliatedPeople.length}}">
+                <view
+                    class="chip chip--on chip--removable"
+                    wx:for="{{affiliatedPeople}}"
+                    wx:key="id"
+                    data-id="{{item.id}}"
+                    bindtap="handleRemoveAffiliated"
+                >
+                    <text>{{item.name}}</text>
+                    <text class="chip-x">×</text>
+                </view>
+            </view>
+            <view class="aff-search">
+                <input
+                    class="aff-input"
+                    placeholder="输入姓名搜索添加"
+                    value="{{affKeyword}}"
+                    confirm-type="search"
+                    bindinput="onAffKeywordInput"
+                    bindconfirm="handleSearchAffiliated"
+                />
+                <view class="aff-clear" wx:if="{{affKeyword}}" bindtap="handleClearAffKeyword">清除</view>
+                <view class="aff-btn" hover-class="aff-btn--hover" bindtap="handleSearchAffiliated">搜索</view>
+            </view>
+            <view class="aff-hint" wx:if="{{affSearching}}">搜索中...</view>
+            <view class="aff-results" wx:if="{{affResults.length}}">
+                <view
+                    class="aff-result"
+                    hover-class="aff-result--hover"
+                    wx:for="{{affResults}}"
+                    wx:key="id"
+                    data-id="{{item.id}}"
+                    data-name="{{item.name}}"
+                    bindtap="handleAddAffiliated"
+                >
+                    <image
+                        class="aff-result-avatar"
+                        wx:if="{{item.avatar}}"
+                        src="{{item.avatar}}"
+                        mode="aspectFill"
+                    />
+                    <view class="aff-result-avatar aff-result-avatar--empty" wx:else>人</view>
+                    <text class="aff-result-name">{{item.name}}</text>
+                    <text class="aff-result-gender" wx:if="{{item.gender_text}}">{{item.gender_text}}</text>
+                    <view class="aff-result-spacer"></view>
+                    <text class="aff-result-meta" wx:if="{{item.type_text}}">{{item.type_text}}</text>
+                    <text class="aff-result-add">添加</text>
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">工作信息</view>
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="公司" placeholder="选填" value="{{company}}" bind:input_change="onCompanyChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="部门" placeholder="选填" value="{{department}}" bind:input_change="onDepartmentChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="岗位" placeholder="选填" value="{{job}}" bind:input_change="onJobChange" />
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="date" label="入职时间" date="{{entryDate}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onEntryDateChange" />
+        <mx-textarea label="工作经历" placeholder="选填" value="{{workExperience}}" bind:textarea_change="onWorkExperienceChange" />
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">教育信息</view>
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="学校" placeholder="选填" value="{{school}}" bind:input_change="onSchoolChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="专业" placeholder="选填" value="{{major}}" bind:input_change="onMajorChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="学历" placeholder="选填" value="{{education}}" bind:input_change="onEducationChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="毕业时间" placeholder="选填" value="{{graduationDate}}" bind:input_change="onGraduationDateChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="班级" placeholder="选填" value="{{classAndGrade}}" bind:input_change="onClassAndGradeChange" />
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="班内职务" placeholder="选填" value="{{classPost}}" bind:input_change="onClassPostChange" />
+        <mx-textarea label="教育经历" placeholder="选填" value="{{educationExperience}}" bind:textarea_change="onEducationExperienceChange" />
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">其他信息</view>
+        <mx-input styleType="horizontal" leftWidth="{{180}}" label="认识渠道" placeholder="选填" value="{{channel}}" bind:input_change="onChannelChange" />
+        <mx-list-picker styleType="horizontal" leftWidth="{{180}}" mode="date" label="认识日期" date="{{firstDate}}" isLeft="{{true}}" arrows="{{true}}" bind:list_picker_change="onFirstDateChange" />
+        <mx-textarea label="个人描述" placeholder="选填" value="{{desc}}" bind:textarea_change="onDescChange" />
+        <mx-textarea label="备注" placeholder="选填" value="{{remark}}" bind:textarea_change="onRemarkChange" />
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">照片（最多3张）</view>
+        <view class="photo-block">
+            <view class="photo-grid">
+                <view class="photo-item" wx:for="{{photos}}" wx:key="key">
+                    <image
+                        class="photo-img"
+                        src="{{item.url}}"
+                        mode="aspectFill"
+                        data-index="{{index}}"
+                        bindtap="handlePreviewPhoto"
+                    />
+                    <view class="photo-del" data-index="{{index}}" catchtap="handleRemovePhoto">×</view>
+                </view>
+                <view
+                    class="photo-add"
+                    hover-class="photo-add--hover"
+                    wx:if="{{photos.length < 3}}"
+                    bindtap="handleAddPhoto"
+                >
+                    <view class="photo-add-plus">+</view>
+                    <text>添加图片</text>
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <view class="form-foot">
+        <mx-btn type="primary" width="686rpx" loading="{{submitting}}" bind:tap="handleSubmit">
+            {{isEdit ? '保存' : '提交'}}
+        </mx-btn>
+        <mx-safe-area />
+    </view>
+</view>
+
+<view class="form-tip" wx:if="{{loading}}">加载中...</view>
+
+<mx-dialog-bottom
+    visible="{{tagPopupVisible}}"
+    height="78vh"
+    zIndex="{{1000}}"
+    showClose="{{false}}"
+    bind:dialog_bottom_close="handleCloseTagPopup"
+>
+    <view class="tag-popup">
+        <view class="tag-popup-hd">
+            <view class="tag-popup-title">选择标签</view>
+            <view class="tag-popup-done" hover-class="tag-popup-done--hover" bindtap="handleCloseTagPopup">完成</view>
+        </view>
+        <view class="tag-popup-search">
+            <mx-search
+                styleType="insert"
+                value="{{tagKeyword}}"
+                placeholder="搜索标签名"
+                showBtn="{{false}}"
+                bgColor="#f3f4f6"
+                cursorColor="#1f1f1f"
+                bind:search_change="onTagKeywordChange"
+            />
+        </view>
+        <scroll-view scroll-x class="tag-type-scroll" enhanced show-scrollbar="{{false}}" wx:if="{{tagTypeTabs.length > 1}}">
+            <view class="tag-type-list">
+                <view
+                    class="tag-type {{tagTypeFilter === item.value ? 'tag-type--on' : ''}}"
+                    wx:for="{{tagTypeTabs}}"
+                    wx:key="value"
+                    data-value="{{item.value}}"
+                    bindtap="handleTagTypeFilter"
+                >{{item.label}}</view>
+            </view>
+        </scroll-view>
+        <scroll-view scroll-y class="tag-popup-body" enhanced show-scrollbar="{{false}}">
+            <view class="tag-popup-empty" wx:if="{{!tagGroups.length}}">无匹配标签</view>
+            <block wx:for="{{tagGroups}}" wx:key="type">
+                <view class="tag-group-title" wx:if="{{item.type_text}}">{{item.type_text}}</view>
+                <view class="chip-list chip-list--popup">
+                    <view
+                        class="chip {{tag.selected ? 'chip--on' : ''}}"
+                        wx:for="{{item.tags}}"
+                        wx:for-item="tag"
+                        wx:key="id"
+                        data-id="{{tag.id}}"
+                        bindtap="handleToggleTag"
+                    >{{tag.name}}</view>
+                </view>
+            </block>
+            <mx-safe-area />
+        </scroll-view>
+    </view>
+</mx-dialog-bottom>
+
+<debug-panel />

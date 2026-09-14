@@ -112,21 +112,52 @@
                 <view
                     wx:for="{{logs}}"
                     wx:key="time"
-                    class="list-card"
+                    class="list-card {{expandedLogIndex === index ? 'expanded' : ''}}"
                     data-index="{{index}}"
-                    bind:tap="copyLogItem"
+                    bind:tap="toggleLogItem"
                 >
-                    <view class="list-main">
-                        <text class="method method-{{item.method}}">{{item.method}}</text>
-                        <text class="list-title">{{item.url}}</text>
+                    <view class="list-summary">
+                        <view class="list-main">
+                            <text class="method method-{{item.method}}">{{item.method}}</text>
+                            <view class="list-paths">
+                                <text class="list-host">{{item.apiHost || '-'}}</text><text class="list-title">{{item.url}}</text>
+                            </view>
+                        </view>
+                        <view class="list-toggle">
+                            <view class="toggle-arrow {{expandedLogIndex === index ? 'up' : 'down'}}"></view>
+                        </view>
+                        <view class="list-sub">
+                            <text>返回码：{{item.statusCode}}</text>
+                            <text class="dot-sep">·</text>
+                            <text>耗时：{{item.duration}}ms</text>
+                            <text wx:if="{{item.envName}}" class="dot-sep">·</text>
+                            <text wx:if="{{item.envName}}">{{item.envName}}</text>
+                        </view>
                     </view>
-                    <view class="list-sub">
-                        <text>{{item.statusCode}}</text>
-                        <text class="dot-sep">·</text>
-                        <text>{{item.duration}}ms</text>
-                        <text wx:if="{{item.envName}}" class="dot-sep">·</text>
-                        <text wx:if="{{item.envName}}">{{item.envName}}</text>
-                        <text class="hint">点击复制</text>
+                    <view wx:if="{{expandedLogIndex === index}}" class="log-detail" catch:tap="">
+                        <view class="log-detail-row">
+                            <text class="log-detail-label">域名</text>
+                            <text class="log-detail-value" selectable>{{item.apiHost || '-'}}</text>
+                        </view>
+                        <view class="log-detail-row">
+                            <text class="log-detail-label">接口名称</text>
+                            <text class="log-detail-value" selectable>{{item.url}}</text>
+                        </view>
+                        <view class="log-detail-row">
+                            <text class="log-detail-label">请求头</text>
+                            <text class="log-detail-value code" selectable>{{item.headerText}}</text>
+                        </view>
+                        <view class="log-detail-row">
+                            <text class="log-detail-label">请求参数</text>
+                            <text class="log-detail-value code" selectable>{{item.dataText}}</text>
+                        </view>
+                        <view class="log-detail-row last">
+                            <text class="log-detail-label">返回值</text>
+                            <text class="log-detail-value code" selectable>{{item.responseText}}</text>
+                        </view>
+                        <view class="log-detail-actions">
+                            <view class="tool-btn primary" data-index="{{index}}" catch:tap="copyLogItem">复制</view>
+                        </view>
                     </view>
                 </view>
                 <view wx:if="{{!logs.length}}" class="empty">
@@ -157,7 +188,7 @@
                     >
                         <text class="store-td col-name">{{item.key}}</text>
                         <text class="store-td col-value">{{item.valuePreview}}</text>
-                        <text class="store-td col-expire {{item.expired ? 'expired' : ''}}">{{item.expireText}}</text>
+                        <view class="store-td col-expire {{item.expired ? 'expired' : ''}}">{{item.expireText}}</view>
                         <view class="store-td col-ops">
                             <text class="op danger" data-key="{{item.key}}" catch:tap="removeStorageKey">删除</text>
                         </view>

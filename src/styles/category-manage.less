@@ -1,0 +1,237 @@
+.manage-page {
+    box-sizing: border-box;
+    padding: 12rpx 0 80rpx;
+    color: #202124;
+    background: #f6f7f9;
+}
+
+.manage-search {
+    display: flex;
+    align-items: center;
+    margin: 8rpx 24rpx 20rpx;
+    padding: 14rpx;
+    background: #fff;
+    border-radius: 18rpx;
+    box-shadow: 0 6rpx 24rpx rgba(31, 35, 41, 0.04);
+}
+
+.manage-search-box {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    height: 68rpx;
+    padding-left: 18rpx;
+    background: #f3f4f6;
+    border-radius: 12rpx;
+}
+
+.manage-search-input {
+    flex: 1;
+    min-width: 0;
+    height: 68rpx;
+    margin-left: 12rpx;
+    font-size: 26rpx;
+}
+
+.manage-search-clear {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 52rpx;
+    height: 52rpx;
+}
+
+.manage-search-btn {
+    flex-shrink: 0;
+    width: 108rpx;
+    height: 68rpx;
+    margin-left: 12rpx;
+    line-height: 68rpx;
+    text-align: center;
+    font-size: 26rpx;
+    color: #fff;
+    background: #25272b;
+    border-radius: 12rpx;
+}
+
+.manage-columns {
+    display: flex;
+    min-height: 400px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8rpx 28rpx rgba(31, 35, 41, 0.04);
+}
+
+.manage-sidebar {
+    flex-shrink: 0;
+    width: 190rpx;
+    height: 100%;
+    background: #f0f2f5;
+
+    &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+}
+
+.manage-sidebar-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 82rpx;
+    font-size: 22rpx;
+    font-weight: 500;
+    color: #9a9fa8;
+}
+
+.manage-option {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 82rpx;
+    padding: 16rpx 12rpx;
+    text-align: center;
+    font-size: 24rpx;
+    line-height: 1.35;
+    color: #676d76;
+}
+
+.manage-option--active {
+    color: #25272b;
+    font-weight: 600;
+    background: #fff;
+
+    &::before {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 6rpx;
+        background: #25272b;
+        content: "";
+    }
+}
+
+.manage-results {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    padding: 0 18rpx;
+    box-sizing: border-box;
+
+    &::-webkit-scrollbar {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+}
+
+.manage-results-head {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22rpx 2rpx 18rpx;
+    background: #fff;
+    border-bottom: 1rpx solid #eef0f2;
+}
+
+.manage-results-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 25rpx;
+    font-weight: 500;
+    color: #33373d;
+}
+
+.manage-results-count {
+    flex-shrink: 0;
+    margin-left: 10rpx;
+    font-size: 21rpx;
+    color: #9da2aa;
+}
+
+.manage-item {
+    display: flex;
+    align-items: center;
+    padding: 20rpx 0;
+    border-bottom: 1rpx solid #eef0f2;
+}
+
+.manage-item-thumb,
+.manage-item-placeholder {
+    flex-shrink: 0;
+    width: 70rpx;
+    height: 70rpx;
+    margin-right: 14rpx;
+    border-radius: 10rpx;
+}
+
+.manage-item-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23rpx;
+    color: #8e949d;
+    background: #eff1f4;
+}
+
+.manage-item-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.manage-item-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 26rpx;
+    font-weight: 500;
+    color: #2d3035;
+}
+
+.manage-item-meta {
+    margin-top: 7rpx;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 20rpx;
+    color: #9ca1a9;
+}
+
+.manage-item-arrow {
+    margin-left: 8rpx;
+    color: #c3c7cd;
+    font-size: 30rpx;
+}
+
+.manage-state {
+    padding: 48rpx 8rpx;
+    text-align: center;
+    font-size: 22rpx;
+    color: #9da2aa;
+}
+
+.manage-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-height: 320rpx;
+    padding: 20rpx;
+}
+
+.manage-hover {
+    opacity: 0.8;
+}

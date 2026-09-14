@@ -1,0 +1,72 @@
+<mx-nav theme="light" title="待办清单" />
+
+<view class="todo-page" style="min-height: {{contentHeight}}px;">
+    <view class="todo-tabs">
+        <scroll-view scroll-x class="todo-tabs-scroll" enable-flex>
+            <view
+                class="todo-tab {{scope === item.value ? 'todo-tab--active' : ''}}"
+                wx:for="{{scopes}}"
+                wx:key="value"
+                data-value="{{item.value}}"
+                data-label="{{item.label}}"
+                bindtap="handleScopeTap"
+            >{{item.label}}</view>
+        </scroll-view>
+    </view>
+
+    <view class="todo-summary">
+        <view class="todo-summary-title">{{selectedScopeLabel}}</view>
+        <view class="todo-summary-count">共 {{total}} 项</view>
+    </view>
+
+    <view
+        class="todo-item {{item.isDone ? 'todo-item--done' : ''}} {{!item.isDone && (item.countdownState === 'urgent' || item.countdownState === 'overdue') ? 'todo-item--alert' : ''}}"
+        hover-class="todo-item--hover"
+        wx:for="{{list}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="handleDetail"
+    >
+        <view class="todo-done-mark" wx:if="{{item.isDone}}">
+            <view class="todo-done-check"></view>
+        </view>
+        <view class="todo-item-main">
+            <view class="todo-item-head">
+                <view class="todo-title">{{item.title}}</view>
+                <view class="todo-done-tag" wx:if="{{item.isDone}}">已完成</view>
+                <view class="todo-priority todo-priority--{{item.priorityClass}}" wx:else>{{item.priority_text}}</view>
+            </view>
+            <view class="todo-content" wx:if="{{item.content}}">{{item.content}}</view>
+            <view class="todo-meta">
+                <text wx:if="{{item.type_text}}">{{item.type_text}}</text>
+                <text wx:if="{{item.status_text && !item.isDone}}"> · {{item.status_text}}</text>
+                <text wx:if="{{item.affiliation_name}}"> · {{item.affiliation_name}}</text>
+            </view>
+            <view class="todo-date-row" wx:if="{{item.planEndDisplay || item.countdownText}}">
+                <view class="todo-date" wx:if="{{item.planEndDisplay}}">截止：{{item.planEndDisplay}}</view>
+                <view
+                    class="todo-countdown todo-countdown--{{item.countdownState}}"
+                    wx:if="{{item.countdownText}}"
+                >{{item.countdownText}}</view>
+            </view>
+        </view>
+    </view>
+
+    <view class="todo-state" wx:if="{{loading}}">加载中...</view>
+    <view class="todo-empty" wx:if="{{!loading && empty}}" style="height: {{contentHeight - 150}}px;">
+        <mx-empty
+            text=""
+            desc="暂无待办"
+            descColor="#c2c6cd"
+            iconName="empty"
+            iconColor="#c8ccd3"
+            iconSize="{{96}}"
+        />
+    </view>
+    <view class="todo-state" wx:if="{{loadingMore}}">加载更多...</view>
+    <view class="todo-state" wx:if="{{!hasMore && list.length && !loading}}">没有更多了</view>
+
+    <view class="todo-fab" wx:if="{{canAdd}}" hover-class="todo-fab--hover" bindtap="handleAdd">+</view>
+    <mx-safe-area />
+</view>
+<debug-panel />

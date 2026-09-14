@@ -1,5 +1,7 @@
-# MXXCX 框架
+# 流年凝雪小程序
+使用 MXXCX框架 和 MXWUI组件库。
 
+# MXXCX 框架
 基于微信小程序原生语法的一套开发框架。集成 MXWUI 组件库，内置请求、存储、上传、授权、导航、支付等基建能力，并提供页面模版与 Debug 小绿点。
 
 ## 安装与脚本
@@ -40,6 +42,19 @@ yarn upload
 构建时自动注入 `VERSION`（`package.json version` + 时间戳），如 `1.0.0.202608011430`。
 
 请填写：`APPID`、OSS 等字段；后端多环境（测试/灰度/线上）的域名与 Cookie 在对应 `config.*.js` 的 `ENV_LIST` 中配置。
+
+## 登录鉴权
+
+启动时静默 `wx.login` → `auth/login`（openid 白名单 + JWT）。本地用户信息见 `MX.getUserInfo()`（含 `openid` / `role` / `affiliation`）。
+
+权限规则：
+- **min**：全部数据可看可改可删
+- **juan**：可看全部；物品/衣物/待办/日记仅可改删「娟」的数据；**食品/药品**可增删改查；**续费/人事**可新增与查看，编辑/删除仅「娟」的数据
+- **喝水 / 时间**：各自只看、只改本人数据，不可切换对方
+- 仅 **min/juan** 可见底部导航，并可进入工具/管理页
+- **无权限不显示按钮**（非点按后再拦截）
+
+后端配置与白名单录入见 `api.mingsixue.com/docs/lnnx/auth.md`。子明词接口可匿名；其余业务接口需登录。
 
 ## UI 组件库
 
@@ -101,7 +116,7 @@ MX.post("/api/demo", { id: 1 });
 
 ## 小绿点 Debug
 
-`ENABLE_DEBUG=true` 时全局开启（`app.json` 已注册，各页面挂载 `<debug-panel />`），所有页面可见。支持路径复制、跳转、清缓存、请求/缓存记录、扫一扫、关闭等。
+`ENABLE_DEBUG=true` 时全局开启（`app.json` 已注册，各页面挂载 `<debug-panel />`），所有页面可见。支持路径复制、跳转、清缓存、请求/缓存记录、扫一扫、关闭等。请求日志仅保留当天（本地缓存跨天自动清空）。
 
 **后端环境切换**：在 `config.*.js` 的 `ENV_LIST` 按 `type`（`test` / `gray` / `online`）配置，同一类型可写多套（不同 `APIHOST` + `cookie`）。小绿点主面板先点类型，再选具体环境；请求自动带上对应域名与 Cookie。
 

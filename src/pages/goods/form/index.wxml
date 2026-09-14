@@ -1,0 +1,267 @@
+<mx-nav theme="light" title="{{title}}" bgColor="#f5f6f8" />
+
+<view class="form-page" wx:if="{{!loading}}">
+    <view class="form-panel">
+        <mx-input
+            styleType="horizontal"
+            label="名称"
+            required="{{true}}"
+            placeholder="请输入物品名称"
+            value="{{name}}"
+            bind:input_change="onNameChange"
+        />
+        <mx-list-picker
+            wx:if="{{!affiliationLocked}}"
+            styleType="horizontal"
+            mode="selector"
+            label="归属"
+            required="{{true}}"
+            options="{{affiliationOptions}}"
+            rangeKey="label"
+            index="{{affiliationIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onAffiliationChange"
+        />
+        <mx-input
+            wx:if="{{affiliationLocked}}"
+            styleType="horizontal"
+            label="归属"
+            value="娟"
+            disabled="{{true}}"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="分类"
+            placeholder="请选择分类"
+            options="{{categoryOptions}}"
+            rangeKey="label"
+            index="{{categoryIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onCategoryChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="位置"
+            placeholder="请选择位置"
+            options="{{placeOptions}}"
+            rangeKey="label"
+            index="{{placeIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onPlaceChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="状态"
+            options="{{statusOptions}}"
+            rangeKey="label"
+            index="{{statusIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onStatusChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="频率"
+            options="{{frequencyOptions}}"
+            rangeKey="label"
+            index="{{frequencyIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onFrequencyChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="季节"
+            options="{{seasonOptions}}"
+            rangeKey="label"
+            index="{{seasonIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            showLine="{{false}}"
+            bind:list_picker_change="onSeasonChange"
+        />
+    </view>
+
+    <view class="form-panel">
+        <mx-input
+            styleType="horizontal"
+            label="数量"
+            type="number"
+            placeholder="选填"
+            value="{{num}}"
+            bind:input_change="onNumChange"
+        />
+        <mx-input
+            styleType="horizontal"
+            label="单位"
+            placeholder="选填"
+            value="{{unit}}"
+            bind:input_change="onUnitChange"
+        />
+        <mx-input
+            styleType="horizontal"
+            label="颜色"
+            placeholder="选填"
+            value="{{color}}"
+            bind:input_change="onColorChange"
+        />
+        <mx-input
+            styleType="horizontal"
+            label="品牌"
+            placeholder="选填"
+            value="{{brand}}"
+            bind:input_change="onBrandChange"
+        />
+        <mx-input
+            styleType="horizontal"
+            label="来源"
+            placeholder="选填"
+            value="{{source}}"
+            bind:input_change="onSourceChange"
+        />
+        <mx-input
+            styleType="horizontal"
+            label="购买价格"
+            type="digit"
+            placeholder="选填"
+            value="{{buyPrice}}"
+            bind:input_change="onBuyPriceChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="date"
+            label="购买日期"
+            date="{{buyDate}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            showLine="{{false}}"
+            bind:list_picker_change="onBuyDateChange"
+        />
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">主图（1张）</view>
+        <view class="photo-block">
+            <view class="photo-grid">
+                <view class="photo-item" wx:for="{{photos}}" wx:key="key">
+                    <image
+                        class="photo-img"
+                        src="{{item.url}}"
+                        mode="aspectFill"
+                        data-index="{{index}}"
+                        bindtap="handlePreviewPhoto"
+                    />
+                    <view class="photo-del" data-index="{{index}}" catchtap="handleRemovePhoto">×</view>
+                </view>
+                <view
+                    class="photo-add"
+                    hover-class="photo-add--hover"
+                    wx:if="{{photos.length < 1}}"
+                    bindtap="handleAddPhoto"
+                >
+                    <view class="photo-add-plus">+</view>
+                    <text>添加图片</text>
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <view class="form-panel">
+        <view class="form-section-title">关联物品</view>
+        <view class="select-block">
+            <view class="related-selected" wx:if="{{relatedItems.length}}">
+                <view
+                    class="related-selected-item"
+                    wx:for="{{relatedItems}}"
+                    wx:key="id"
+                >
+                    <image
+                        class="related-selected-thumb"
+                        wx:if="{{item.thumb}}"
+                        src="{{item.thumb}}"
+                        mode="aspectFill"
+                        data-id="{{item.id}}"
+                        bindtap="handlePreviewRelatedItem"
+                    />
+                    <view class="related-selected-thumb related-selected-thumb--empty" wx:else>物</view>
+                    <view class="related-selected-main">
+                        <text class="related-selected-name">{{item.name}}</text>
+                        <text class="related-selected-meta" wx:if="{{item.category_name}}">{{item.category_name}}</text>
+                    </view>
+                    <view
+                        class="related-selected-del"
+                        hover-class="related-selected-del--hover"
+                        data-id="{{item.id}}"
+                        catchtap="handleRemoveRelated"
+                    >删除</view>
+                </view>
+            </view>
+            <view class="select-empty" wx:else>未关联其他物品</view>
+            <view class="aff-search">
+                <input
+                    class="aff-input"
+                    placeholder="输入名称搜索添加"
+                    value="{{relatedKeyword}}"
+                    confirm-type="search"
+                    bindinput="onRelatedKeywordInput"
+                    bindconfirm="handleSearchRelated"
+                />
+                <view class="aff-clear" wx:if="{{relatedKeyword}}" bindtap="handleClearRelatedKeyword">清除</view>
+                <view class="aff-btn" hover-class="aff-btn--hover" bindtap="handleSearchRelated">搜索</view>
+            </view>
+            <view class="aff-hint" wx:if="{{relatedSearching}}">搜索中...</view>
+            <view class="aff-results" wx:if="{{relatedResults.length}}">
+                <view
+                    class="aff-result"
+                    hover-class="aff-result--hover"
+                    wx:for="{{relatedResults}}"
+                    wx:key="id"
+                    data-id="{{item.id}}"
+                    bindtap="handleAddRelated"
+                >
+                    <image
+                        class="aff-result-thumb"
+                        wx:if="{{item.thumb}}"
+                        src="{{item.thumb}}"
+                        mode="aspectFill"
+                        data-id="{{item.id}}"
+                        catchtap="handlePreviewRelatedResult"
+                    />
+                    <view class="aff-result-thumb aff-result-thumb--empty" wx:else>物</view>
+                    <view class="aff-result-main">
+                        <text class="aff-result-name">{{item.name}}</text>
+                        <text class="aff-result-meta" wx:if="{{item.category_name}}">{{item.category_name}}</text>
+                    </view>
+                    <text class="aff-result-add">添加</text>
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <view class="form-panel">
+        <mx-textarea
+            label="备注"
+            placeholder="选填"
+            value="{{remark}}"
+            bind:textarea_change="onRemarkChange"
+        />
+    </view>
+
+    <view class="form-foot">
+        <mx-btn type="primary" width="686rpx" loading="{{submitting}}" bind:tap="handleSubmit">
+            {{isEdit ? '保存' : '提交'}}
+        </mx-btn>
+        <mx-safe-area />
+    </view>
+</view>
+
+<view class="form-tip" wx:if="{{loading}}">加载中...</view>
+<debug-panel />

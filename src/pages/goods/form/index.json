@@ -1,0 +1,12 @@
+{
+    "usingComponents": {
+        "mx-nav": "/components/mxwui/nav/index",
+        "mx-input": "/components/mxwui/input/index",
+        "mx-textarea": "/components/mxwui/textarea/index",
+        "mx-list-picker": "/components/mxwui/list-picker/index",
+        "mx-btn": "/components/mxwui/btn/index",
+        "mx-safe-area": "/components/mxwui/safe-area/index"
+    },
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black"
+}

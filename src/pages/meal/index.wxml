@@ -1,0 +1,80 @@
+<mx-nav theme="dark" bgColor="#C45C26" title="一日三餐" />
+
+<view class="page" style="min-height: {{contentHeight}}px;">
+    <view class="hero" wx:if="{{affiliation}}">
+        <view class="hero-info">
+            <view class="hero-day">{{dayTitle}}</view>
+            <view class="hero-sub">
+                <text wx:if="{{userName}}">{{userName}}</text>
+                <text wx:if="{{userName}}" class="hero-sub-dot">·</text>
+                <text>已记录 {{dayTimes}} 餐</text>
+            </view>
+        </view>
+        <view class="hero-cal" hover-class="hero-cal--hover" bindtap="handleCalendar">
+            <view class="hero-cal-card">
+                <view class="hero-cal-hd"></view>
+                <view class="hero-cal-text">日历</view>
+            </view>
+        </view>
+        <view class="hero-side">
+            <view class="hero-add" hover-class="hero-add--hover" bindtap="handleAdd">+ 记录</view>
+        </view>
+    </view>
+
+    <block wx:if="{{affiliation}}">
+        <view class="record-wrap" wx:for="{{records}}" wx:key="id">
+            <mx-swipe-action
+                rightButtons="{{swipeButtons}}"
+                name="{{item.id}}"
+                bind:button_tap="handleSwipeAction"
+            >
+                <view class="record">
+                    <view class="record-hd">
+                        <view class="record-type">{{item.meal_type_text}}</view>
+                        <view class="record-time">{{item.timeText}}</view>
+                    </view>
+
+                    <view
+                        class="record-main {{item.coverUrl && (item.content || item.location) ? 'record-main--split' : ''}}"
+                        wx:if="{{item.coverUrl || item.content || item.location}}"
+                    >
+                        <view
+                            class="record-cover"
+                            wx:if="{{item.coverUrl}}"
+                            data-urls="{{item.photo_urls}}"
+                            data-current="{{item.coverUrl}}"
+                            bindtap="handlePreview"
+                        >
+                            <image class="record-cover-img" src="{{item.coverUrl}}" mode="aspectFill" />
+                            <view class="record-cover-count" wx:if="{{item.photoCount > 1}}">{{item.photoCount}}张</view>
+                        </view>
+                        <view class="record-info" wx:if="{{item.content || item.location}}">
+                            <view class="record-location" wx:if="{{item.location}}">{{item.location}}</view>
+                            <view class="record-content" wx:if="{{item.content}}">{{item.content}}</view>
+                        </view>
+                    </view>
+                </view>
+            </mx-swipe-action>
+        </view>
+
+        <view class="empty" wx:if="{{!dayLoading && !records.length}}">
+            <view class="empty-art" aria-hidden="true">
+                <view class="empty-plate">
+                    <view class="empty-plate-inner">
+                        <view class="empty-steam s1"></view>
+                        <view class="empty-steam s2"></view>
+                        <view class="empty-steam s3"></view>
+                        <view class="empty-bowl"></view>
+                    </view>
+                </view>
+            </view>
+            <view class="empty-title">今天还没有三餐记录</view>
+            <view class="empty-desc">拍张照片，记下今天吃了什么</view>
+            <view class="empty-cta" hover-class="empty-cta--hover" bindtap="handleAdd">去记录一餐</view>
+        </view>
+    </block>
+
+    <mx-safe-area />
+</view>
+
+<debug-panel />

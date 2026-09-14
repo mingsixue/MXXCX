@@ -1,0 +1,89 @@
+<mx-nav theme="light" title="新增日记" bgColor="#f7f8fa" />
+
+<view class="page">
+    <view class="meta">
+        <picker class="meta-col" mode="date" value="{{day}}" bindchange="onNativeDayChange">
+            <view class="meta-item" hover-class="meta-item--hover">
+                <view class="meta-k">日期</view>
+                <view class="meta-v">
+                    <text>{{day}}</text>
+                    <text class="meta-arrow">›</text>
+                </view>
+            </view>
+        </picker>
+        <view class="meta-divider"></view>
+        <picker
+            class="meta-col"
+            wx:if="{{!affiliationLocked}}"
+            mode="selector"
+            range="{{affiliationOptions}}"
+            range-key="label"
+            value="{{affiliationIndex}}"
+            bindchange="onNativeAffiliationChange"
+        >
+            <view class="meta-item" hover-class="meta-item--hover">
+                <view class="meta-k">归属</view>
+                <view class="meta-v">
+                    <text>{{affiliationOptions[affiliationIndex].label}}</text>
+                    <text class="meta-arrow">›</text>
+                </view>
+            </view>
+        </picker>
+        <view class="meta-col" wx:else>
+            <view class="meta-item">
+                <view class="meta-k">归属</view>
+                <view class="meta-v">
+                    <text>娟</text>
+                </view>
+            </view>
+        </view>
+    </view>
+
+    <view class="meta-sub">
+        <text>{{week}}</text>
+        <text wx:if="{{isRepairText}}" class="meta-sub-tag"> · {{isRepairText}}</text>
+    </view>
+
+    <view class="editor">
+        <view class="editor-title">日记内容</view>
+        <textarea
+            class="editor-area"
+            placeholder="写点什么…"
+            placeholder-class="editor-ph"
+            value="{{content}}"
+            maxlength="10000"
+            focus="{{false}}"
+            bindinput="onContentInput"
+            adjust-position="{{true}}"
+            show-confirm-bar="{{false}}"
+        />
+        <view class="editor-foot">
+            <text class="editor-count">{{contentLength}} / 10000</text>
+        </view>
+    </view>
+
+    <view class="tags">
+        <view class="tags-title">标签</view>
+        <input
+            class="tags-input"
+            placeholder="选填，多个用顿号分隔"
+            placeholder-class="tags-ph"
+            value="{{tags}}"
+            bindinput="onTagsInput"
+        />
+    </view>
+</view>
+
+<view class="foot">
+    <mx-btn
+        type="primary"
+        width="670rpx"
+        themeColor="#1a1a1a"
+        disabled="{{submitting}}"
+        unclickable="{{submitting}}"
+        bind:tap="handleSubmit"
+    >提交</mx-btn>
+    <mx-safe-area />
+</view>
+
+<debug-panel />

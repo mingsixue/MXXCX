@@ -1,0 +1,60 @@
+@import "../../goods/detail/index.less";
+
+.hero-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20rpx;
+}
+
+.hero-heading .hero-name {
+    flex: 1;
+    min-width: 0;
+}
+
+.hero-tags {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10rpx;
+}
+
+.hero-status,
+.hero-expiry {
+    flex-shrink: 0;
+    display: inline-block;
+    padding: 7rpx 16rpx;
+    font-size: 22rpx;
+    border-radius: 10rpx;
+}
+
+.hero-status--normal {
+    color: #3d6f9c;
+    background: #eaf3fa;
+}
+
+.hero-status--expired {
+    color: #a25248;
+    background: #faecea;
+}
+
+.hero-status--used {
+    color: #6f7580;
+    background: #eef0f3;
+}
+
+.hero-expiry {
+    color: #4c765c;
+    background: #edf6f0;
+}
+
+.hero-expiry--today,
+.hero-expiry--urgent {
+    color: #c0392b;
+    background: #fdecea;
+}
+
+.hero-expiry--expired {
+    color: #a25248;
+    background: #faecea;
+}

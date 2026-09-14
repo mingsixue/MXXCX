@@ -1,0 +1,111 @@
+<mx-nav theme="light" title="人事查询" />
+
+<view class="page {{searched ? 'page--result' : 'page--idle'}}" style="min-height: {{contentHeight}}px;">
+    <!-- 空态：居中搜索 -->
+    <block wx:if="{{!searched}}">
+        <view class="idle">
+            <view class="idle-mark">人</view>
+            <view class="idle-title">按姓名查找</view>
+            <view class="idle-desc">支持姓名、小名、曾用名、绰号</view>
+            <view class="search-panel">
+                <view class="search-row">
+                    <view class="search-field">
+                        <mx-search
+                            styleType="insert"
+                            value="{{keyword}}"
+                            placeholder="输入要查找的姓名"
+                            showBtn="{{false}}"
+                            bgColor="#f3f4f6"
+                            cursorColor="#1f1f1f"
+                            bind:search_change="handleSearchChange"
+                        />
+                    </view>
+                    <view class="search-action" hover-class="search-action--hover" bindtap="handleSearch">查询</view>
+                </view>
+            </view>
+            <view class="idle-hint" wx:if="{{loading}}">查询中...</view>
+        </view>
+    </block>
+
+    <!-- 结果态 -->
+    <block wx:else>
+        <view class="search-sticky">
+            <view class="search-row">
+                <view class="search-field">
+                    <mx-search
+                        wx:if="{{searchReady}}"
+                        styleType="insert"
+                        value="{{keyword}}"
+                        placeholder="输入姓名 / 小名 / 曾用名"
+                        showBtn="{{false}}"
+                        bgColor="#f3f4f6"
+                        cursorColor="#1f1f1f"
+                        bind:search_change="handleSearchChange"
+                    />
+                </view>
+                <view class="search-action" hover-class="search-action--hover" bindtap="handleSearch">查询</view>
+            </view>
+        </view>
+
+        <view class="result-bar" wx:if="{{!loading}}">
+            <text class="result-count">共找到 {{total}} 人</text>
+            <text class="result-clear" bindtap="handleReset">重新查询</text>
+        </view>
+
+        <view class="list" wx:if="{{list.length}}">
+            <view
+                class="card"
+                wx:for="{{list}}"
+                wx:key="id"
+                data-id="{{item.id}}"
+                bindtap="handleDetail"
+            >
+                <view class="avatar {{item.photo_urls[0] ? '' : 'avatar--letter'}}">
+                    <image
+                        wx:if="{{item.photo_urls[0]}}"
+                        class="avatar-img"
+                        src="{{item.photo_urls[0]}}"
+                        mode="aspectFill"
+                    />
+                    <text wx:else class="avatar-letter">{{item.nameInitial}}</text>
+                </view>
+                <view class="card-main">
+                    <view class="card-top">
+                        <view class="card-name">
+                            <text>{{item.name}}</text>
+                            <text class="type-badge" wx:if="{{item.type_text}}">{{item.type_text}}</text>
+                            <text class="card-alias" wx:if="{{item.small_name}}">{{item.small_name}}</text>
+                        </view>
+                    </view>
+                    <view class="card-sub">
+                        <text wx:if="{{item.gender_text}}">{{item.gender_text}}</text>
+                        <text wx:if="{{item.job}}">{{item.gender_text ? ' · ' : ''}}{{item.job}}</text>
+                        <text wx:elif="{{item.company}}">{{item.gender_text ? ' · ' : ''}}{{item.company}}</text>
+                        <text wx:elif="{{item.native_place}}">{{item.gender_text ? ' · ' : ''}}{{item.native_place}}</text>
+                        <text wx:elif="{{!item.gender_text}}">查看详情</text>
+                    </view>
+                </view>
+                <view class="card-arrow">›</view>
+            </view>
+        </view>
+
+        <view class="empty-wrap" wx:if="{{!loading && empty}}">
+            <mx-empty
+                text="未找到相关人员"
+                desc="试试其他姓名或小名"
+                iconName="empty"
+                iconSize="{{140}}"
+            />
+        </view>
+        <view class="tip tip--center" wx:if="{{loading}}">查询中...</view>
+        <view class="tip" wx:if="{{loadingMore}}">加载更多...</view>
+        <view class="tip tip--end" wx:if="{{!hasMore && list.length && !loading}}">没有更多了</view>
+    </block>
+</view>
+
+<view class="relation-foot" wx:if="{{canAdd}}">
+    <view class="relation-foot-btn" hover-class="relation-foot-btn--hover" bindtap="handleAdd">新增人事</view>
+    <mx-safe-area />
+</view>
+
+<debug-panel />

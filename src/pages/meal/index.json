@@ -1,0 +1,10 @@
+{
+    "enablePullDownRefresh": true,
+    "usingComponents": {
+        "mx-safe-area": "/components/mxwui/safe-area/index",
+        "mx-nav": "/components/mxwui/nav/index",
+        "mx-swipe-action": "/components/mxwui/swipe-action/index"
+    },
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "white"
+}

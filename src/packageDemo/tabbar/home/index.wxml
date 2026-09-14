@@ -6,5 +6,5 @@
         <mx-btn type="primary" width="100%" bind:tap="goGoodsList">去商品列表</mx-btn>
     </view>
 </view>
-<mx-menu options="{{menus}}" current="{{0}}" selectColor="#CA0E2D" />
+<mx-menu options="{{menus}}" current="{{0}}" selectColor="#292B2F" />
 <debug-panel />

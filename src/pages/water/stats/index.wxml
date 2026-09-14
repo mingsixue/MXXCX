@@ -1,0 +1,116 @@
+<mx-nav theme="dark" bgColor="#1A6B8A" title="喝水统计" />
+
+<view class="page" style="min-height: {{contentHeight}}px;">
+    <view class="tabs">
+        <view
+            class="tab {{item.on ? 'tab--on' : ''}}"
+            wx:for="{{tabItems}}"
+            wx:key="key"
+            data-tab="{{item.key}}"
+            bindtap="handleTab"
+        >{{item.name}}</view>
+    </view>
+
+    <view class="period">
+        <view class="period-btn" bindtap="handlePrev">{{prevLabel}}</view>
+        <view class="period-label">{{periodLabel}}</view>
+        <view class="period-btn" bindtap="handleNext">{{nextLabel}}</view>
+    </view>
+
+    <view class="hero-stats">
+        <view class="hero-item">
+            <view class="hero-num">{{totalMl}}</view>
+            <view class="hero-desc">毫升</view>
+        </view>
+        <view class="hero-item">
+            <view class="hero-num">{{times}}</view>
+            <view class="hero-desc">次数</view>
+        </view>
+        <view class="hero-item">
+            <view class="hero-num">{{heroThirdValue}}</view>
+            <view class="hero-desc">{{heroThirdLabel}}</view>
+        </view>
+    </view>
+
+    <view class="panel" wx:if="{{tab === 'day'}}">
+        <view class="panel-title">当日明细</view>
+        <view class="record" wx:for="{{records}}" wx:key="id">
+            <text class="record-time">{{item.time}}</text>
+            <text class="record-ml">+{{item.amount_ml}} ml</text>
+        </view>
+        <view class="empty-card" wx:if="{{!loading && !records.length}}">
+            <view class="empty-drop">
+                <view class="empty-drop-body"></view>
+                <view class="empty-drop-shine"></view>
+            </view>
+            <view class="empty-title">这天还没有喝水</view>
+            <view class="empty-desc">回去记一口，水滴才会落下来</view>
+        </view>
+    </view>
+
+    <view class="panel" wx:if="{{tab === 'week'}}">
+        <view class="panel-title">本周走势</view>
+        <view class="week-chart">
+            <view
+                class="week-col"
+                wx:for="{{weekDays}}"
+                wx:key="day"
+                data-day="{{item.day}}"
+                bindtap="handleDayTap"
+            >
+                <view class="week-ml">{{item.mlText}}</view>
+                <view class="week-bar-wrap">
+                    <view class="week-bar" style="height: {{item.barHeight}}rpx;"></view>
+                </view>
+                <view class="week-label">周{{item.label}}</view>
+                <view class="week-sub">{{item.times}}次</view>
+            </view>
+        </view>
+    </view>
+
+    <view class="panel" wx:if="{{tab === 'month'}}">
+        <view class="panel-title">本月日历</view>
+        <view class="month-head">
+            <text wx:for="{{weekHead}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="month-grid">
+            <view
+                class="month-cell {{item.cellClass}}"
+                wx:for="{{monthDays}}"
+                wx:key="day"
+                data-day="{{item.day}}"
+                bindtap="handleDayTap"
+            >
+                <view class="month-day" wx:if="{{!item.empty}}">{{item.dayNum}}</view>
+                <view class="month-ml" wx:if="{{item.hasDrink}}">{{item.total_ml}}</view>
+            </view>
+        </view>
+        <view class="month-bars">
+            <view
+                class="mbar"
+                wx:for="{{monthBars}}"
+                wx:key="day"
+                data-day="{{item.day}}"
+                bindtap="handleDayTap"
+            >
+                <view class="mbar-day">{{item.dayNum}}日</view>
+                <view class="mbar-track">
+                    <view class="mbar-fill" style="width: {{item.fill_width}}%;"></view>
+                </view>
+                <view class="mbar-meta">{{item.times}}次 · {{item.total_ml}}ml</view>
+            </view>
+        </view>
+        <view class="empty-card" wx:if="{{!loading && drinkDays === 0}}">
+            <view class="empty-drop">
+                <view class="empty-drop-body"></view>
+                <view class="empty-drop-shine"></view>
+            </view>
+            <view class="empty-title">本月暂无喝水记录</view>
+            <view class="empty-desc">坚持记几天，日历就会亮起来</view>
+        </view>
+    </view>
+
+    <view class="tip" wx:if="{{loading}}">加载中...</view>
+    <mx-safe-area />
+</view>
+<debug-panel />

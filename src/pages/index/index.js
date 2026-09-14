@@ -1,12 +1,18 @@
 import MX from "@utils/index";
 import config from "../../config/config";
+import TAB_MENUS from "../tabbar/menus";
 
 Page({
     data: {
+        menus: TAB_MENUS,
         version: "",
         env: "",
         isLogin: false,
         groups: [
+            {
+                title: "内容",
+                list: [{ name: "子明词列表", path: "/pages/zmc/index" }],
+            },
             {
                 title: "页面模版",
                 list: [

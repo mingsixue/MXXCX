@@ -1,0 +1,126 @@
+@import "../../goods/detail/index.less";
+
+.hero-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 16rpx;
+}
+
+.hero-top .hero-name {
+    flex: 1;
+    min-width: 0;
+}
+
+.hero-priority {
+    flex-shrink: 0;
+    margin-top: 8rpx;
+    padding: 8rpx 18rpx;
+    font-size: 22rpx;
+    font-weight: 600;
+    line-height: 1.2;
+    border-radius: 10rpx;
+}
+
+.hero-priority--low {
+    color: #6b7280;
+    background: #f3f4f6;
+}
+
+.hero-priority--mid {
+    color: #2a6f97;
+    background: #eef5fa;
+}
+
+.hero-priority--high {
+    color: #fff;
+    background: #d97706;
+    box-shadow: 0 6rpx 16rpx rgba(217, 119, 6, 0.28);
+}
+
+.hero-priority--urgent {
+    color: #fff;
+    background: #dc2626;
+    box-shadow: 0 6rpx 16rpx rgba(220, 38, 38, 0.32);
+}
+
+.hero-meta-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12rpx;
+    margin-top: 8rpx;
+}
+
+.hero-meta-row .hero-meta {
+    margin-top: 0;
+}
+
+.todo-countdown {
+    flex-shrink: 0;
+    padding: 3rpx 12rpx;
+    font-size: 20rpx;
+    border-radius: 8rpx;
+}
+
+.todo-countdown--soon {
+    color: #976723;
+    background: #fff5df;
+}
+
+.todo-countdown--urgent {
+    color: #fff;
+    background: #dc2626;
+}
+
+.todo-countdown--overdue {
+    color: #fff;
+    background: #b91c1c;
+}
+
+.detail-actions {
+    display: block;
+    padding: 24rpx 32rpx 12rpx;
+}
+
+.action-row {
+    display: flex;
+    gap: 20rpx;
+}
+
+.action-btn {
+    flex: 1;
+    box-sizing: border-box;
+    height: 80rpx;
+    line-height: 80rpx;
+    text-align: center;
+    font-size: 28rpx;
+    font-weight: 500;
+    border-radius: 16rpx;
+}
+
+.action-btn--primary {
+    color: #fff;
+    background: #292b2f;
+}
+
+.action-btn--ghost {
+    color: #292b2f;
+    background: #fff;
+    border: 2rpx solid #d8dce3;
+}
+
+.action-btn--hover {
+    opacity: 0.78;
+}
+
+.action-del {
+    margin-top: 8rpx;
+    padding: 20rpx 0 4rpx;
+    text-align: center;
+    font-size: 26rpx;
+    color: #9aa0a8;
+}
+
+.action-del--hover {
+    color: #a25248;
+}

@@ -1,0 +1,75 @@
+@import "../../../styles/manage-form.less";
+
+.dt-row {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    min-height: 96rpx;
+    padding: 0 28rpx;
+    border-bottom: 1rpx solid #f0f1f3;
+}
+
+.dt-row--last {
+    border-bottom: none;
+}
+
+.dt-row--hover {
+    background: #fafbfc;
+}
+
+.dt-label {
+    flex-shrink: 0;
+    width: 160rpx;
+    margin-right: 24rpx;
+    font-size: 28rpx;
+    color: #25272b;
+    text-align: center;
+}
+
+.dt-value {
+    flex: 1;
+    min-width: 0;
+    font-size: 28rpx;
+    color: #25272b;
+    text-align: left;
+}
+
+.dt-value--ph {
+    color: #c0c4cc;
+}
+
+.dt-clear {
+    flex-shrink: 0;
+    margin-left: 16rpx;
+    padding: 8rpx 4rpx;
+    font-size: 24rpx;
+    color: #2a6f97;
+}
+
+.dt-arrow {
+    flex-shrink: 0;
+    margin-left: 8rpx;
+    font-size: 32rpx;
+    color: #c3c7cd;
+    line-height: 1;
+}
+
+.submit-btn {
+    height: 80rpx;
+    line-height: 80rpx;
+    text-align: center;
+    font-size: 28rpx;
+    font-weight: 500;
+    color: #fff;
+    background: #292b2f;
+    border-radius: 16rpx;
+}
+
+.submit-btn--hover {
+    opacity: 0.78;
+}
+
+.submit-btn--loading {
+    opacity: 0.55;
+    pointer-events: none;
+}

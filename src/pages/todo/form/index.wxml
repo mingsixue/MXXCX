@@ -1,0 +1,177 @@
+<mx-nav theme="light" title="{{title}}" bgColor="#f5f6f8" />
+
+<view class="form-page" wx:if="{{!loading}}">
+    <view class="form-panel">
+        <mx-input
+            styleType="horizontal"
+            label="标题"
+            labelAlign="center"
+            leftWidth="{{160}}"
+            required="{{true}}"
+            placeholder="请输入待办标题"
+            value="{{todoTitle}}"
+            bind:input_change="onTitleChange"
+        />
+        <mx-textarea
+            label="内容"
+            required="{{true}}"
+            placeholder="请输入待办内容"
+            value="{{content}}"
+            bind:textarea_change="onContentChange"
+        />
+    </view>
+
+    <view class="form-panel">
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="分类"
+            labelAlign="center"
+            leftWidth="{{160}}"
+            required="{{true}}"
+            options="{{typeOptions}}"
+            rangeKey="label"
+            index="{{typeIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onTypeChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="优先级"
+            labelAlign="center"
+            leftWidth="{{160}}"
+            required="{{true}}"
+            options="{{priorityOptions}}"
+            rangeKey="label"
+            index="{{priorityIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onPriorityChange"
+        />
+        <mx-list-picker
+            styleType="horizontal"
+            mode="selector"
+            label="状态"
+            labelAlign="center"
+            leftWidth="{{160}}"
+            required="{{true}}"
+            options="{{statusOptions}}"
+            rangeKey="label"
+            index="{{statusIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            bind:list_picker_change="onStatusChange"
+        />
+        <mx-list-picker
+            wx:if="{{!affiliationLocked}}"
+            styleType="horizontal"
+            mode="selector"
+            label="归属"
+            labelAlign="center"
+            leftWidth="{{160}}"
+            required="{{true}}"
+            options="{{affiliationOptions}}"
+            rangeKey="label"
+            index="{{affiliationIndex}}"
+            isLeft="{{true}}"
+            arrows="{{true}}"
+            showLine="{{false}}"
+            bind:list_picker_change="onAffiliationChange"
+        />
+        <mx-input
+            wx:if="{{affiliationLocked}}"
+            styleType="horizontal"
+            label="归属"
+            labelAlign="center"
+            leftWidth="{{160}}"
+            value="娟"
+            disabled="{{true}}"
+            showLine="{{false}}"
+        />
+    </view>
+
+    <view class="form-panel">
+        <mx-input
+            styleType="horizontal"
+            label="负责人"
+            labelAlign="center"
+            leftWidth="{{160}}"
+            placeholder="选填"
+            value="{{assignee}}"
+            bind:input_change="onAssigneeChange"
+        />
+
+        <view
+            class="dt-row"
+            hover-class="dt-row--hover"
+            data-field="planStart"
+            data-title="计划开始"
+            bindtap="openDatetime"
+        >
+            <view class="dt-label">计划开始</view>
+            <view class="dt-value {{planStart ? '' : 'dt-value--ph'}}">{{planStart || '请选择'}}</view>
+            <view class="dt-clear" wx:if="{{planStart}}" data-field="planStart" catchtap="clearDatetime">清除</view>
+            <view class="dt-arrow">›</view>
+        </view>
+        <view
+            class="dt-row"
+            hover-class="dt-row--hover"
+            data-field="planEnd"
+            data-title="计划完成"
+            bindtap="openDatetime"
+        >
+            <view class="dt-label">计划完成</view>
+            <view class="dt-value {{planEnd ? '' : 'dt-value--ph'}}">{{planEnd || '请选择'}}</view>
+            <view class="dt-clear" wx:if="{{planEnd}}" data-field="planEnd" catchtap="clearDatetime">清除</view>
+            <view class="dt-arrow">›</view>
+        </view>
+        <view
+            class="dt-row dt-row--last"
+            hover-class="dt-row--hover"
+            data-field="doneTime"
+            data-title="实际完成"
+            bindtap="openDatetime"
+        >
+            <view class="dt-label">实际完成</view>
+            <view class="dt-value {{doneTime ? '' : 'dt-value--ph'}}">{{doneTime || '请选择'}}</view>
+            <view class="dt-clear" wx:if="{{doneTime}}" data-field="doneTime" catchtap="clearDatetime">清除</view>
+            <view class="dt-arrow">›</view>
+        </view>
+    </view>
+
+    <view class="form-panel">
+        <mx-textarea
+            label="备注"
+            placeholder="选填"
+            value="{{remark}}"
+            bind:textarea_change="onRemarkChange"
+        />
+    </view>
+
+    <view class="form-foot">
+        <view
+            class="submit-btn {{submitting ? 'submit-btn--loading' : ''}}"
+            hover-class="submit-btn--hover"
+            bindtap="handleSubmit"
+        >{{isEdit ? '保存' : '提交'}}</view>
+        <mx-safe-area />
+    </view>
+</view>
+
+<view class="form-tip" wx:if="{{loading}}">加载中...</view>
+
+<mx-datetime
+    visible="{{datetimeVisible}}"
+    value="{{datetimeValue}}"
+    title="{{datetimeTitle}}"
+    showSeconds="{{true}}"
+    confirmColor="#292b2f"
+    cancelColor="#9aa0a8"
+    zIndex="{{1000}}"
+    bind:datetime_confirm="handleDatetimeConfirm"
+    bind:datetime_close="handleDatetimeClose"
+/>
+
+<debug-panel />

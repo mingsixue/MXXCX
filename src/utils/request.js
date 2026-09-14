@@ -7,32 +7,108 @@ import { clearUser, getToken } from "./user";
 import { getApiHost, getEnvHeaders, getSelectedEnv } from "./env";
 
 const pendingMap = new Map();
-let requestLogs = [];
+const REQUEST_LOG_KEY = "_debug_request_logs";
+const MAX_REQUEST_LOGS = 50;
+
+/** @type {object[]|null} */
+let requestLogs = null;
+/** @type {string} YYYY-MM-DD */
+let requestLogsDay = "";
+
+const AUTH_URLS = {
+    "auth/login": true,
+    "auth/me": true,
+};
+
+const isAuthRequestUrl = (url = "") => !!AUTH_URLS[String(url).replace(/^\//, "")];
+
+const todayKey = () => {
+    const d = new Date();
+    const m = `${d.getMonth() + 1}`.padStart(2, "0");
+    const day = `${d.getDate()}`.padStart(2, "0");
+    return `${d.getFullYear()}-${m}-${day}`;
+};
+
+const syncRequestLogsGlobal = () => {
+    try {
+        const app = getApp();
+        if (app && app.globalData) {
+            app.globalData.requestLogs = requestLogs || [];
+        }
+    } catch (e) {
+        // ignore
+    }
+};
+
+const persistRequestLogs = () => {
+    if (!config.ENABLE_DEBUG) return;
+    try {
+        wx.setStorageSync(REQUEST_LOG_KEY, {
+            day: requestLogsDay || todayKey(),
+            list: requestLogs || [],
+        });
+    } catch (e) {
+        // 存储配额满等忽略，内存日志仍可用
+    }
+};
 
 /**
- * 获取最近请求日志（供 Debug 小绿点使用）
+ * 加载当天请求日志；跨天则清空
+ */
+const ensureRequestLogs = () => {
+    const day = todayKey();
+    if (requestLogs !== null && requestLogsDay === day) {
+        return requestLogs;
+    }
+
+    let list = [];
+    if (config.ENABLE_DEBUG) {
+        try {
+            const saved = wx.getStorageSync(REQUEST_LOG_KEY);
+            if (saved && saved.day === day && Array.isArray(saved.list)) {
+                list = saved.list;
+            } else if (saved) {
+                wx.removeStorageSync(REQUEST_LOG_KEY);
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    requestLogs = list;
+    requestLogsDay = day;
+    syncRequestLogsGlobal();
+    return requestLogs;
+};
+
+/**
+ * 获取最近请求日志（供 Debug 小绿点使用，仅当天）
  * @returns {object[]}
  */
-const getRequestLogs = () => requestLogs.slice();
+const getRequestLogs = () => ensureRequestLogs().slice();
 
 /**
  * 清空请求日志
  */
 const clearRequestLogs = () => {
     requestLogs = [];
+    requestLogsDay = todayKey();
+    syncRequestLogsGlobal();
+    if (config.ENABLE_DEBUG) {
+        try {
+            wx.removeStorageSync(REQUEST_LOG_KEY);
+        } catch (e) {
+            // ignore
+        }
+    }
 };
 
 const pushLog = (item) => {
+    ensureRequestLogs();
     requestLogs.unshift(item);
-    if (requestLogs.length > 50) requestLogs.length = 50;
-    try {
-        const app = getApp();
-        if (app && app.globalData) {
-            app.globalData.requestLogs = requestLogs;
-        }
-    } catch (e) {
-        // ignore
-    }
+    if (requestLogs.length > MAX_REQUEST_LOGS) requestLogs.length = MAX_REQUEST_LOGS;
+    syncRequestLogsGlobal();
+    persistRequestLogs();
 };
 
 const clearAuth = () => {
@@ -57,8 +133,31 @@ const abortPending = (key) => {
         } catch (e) {
             // ignore
         }
-        pendingMap.delete(key);
     }
+    pendingMap.delete(key);
+};
+
+/**
+ * 业务请求前等待启动登录完成（auth 接口除外）
+ * @param {string} url
+ */
+const waitLoginReady = async (url) => {
+    if (isAuthRequestUrl(url)) return;
+    try {
+        const app = getApp();
+        const ready = app && app.globalData && app.globalData.loginReady;
+        if (ready && typeof ready.then === "function") {
+            await ready;
+        }
+    } catch (e) {
+        // ignore
+    }
+};
+
+const buildAuthHeader = (token) => {
+    if (!token) return {};
+    const value = String(token).startsWith("Bearer ") ? token : `Bearer ${token}`;
+    return { Authorization: value };
 };
 
 /**
@@ -79,7 +178,6 @@ const abortPending = (key) => {
  * @returns {Promise & { abort: Function }}
  */
 const request = (options = {}) => {
-    const userToken = getToken();
     const key = getRequestKey(options);
     const dedupe = options.dedupe !== false;
 
@@ -87,110 +185,131 @@ const request = (options = {}) => {
 
     let task = null;
     const start = Date.now();
+    let aborted = false;
 
     const promise = new Promise((resolve, reject) => {
-        const runtimeEnv = getSelectedEnv();
-        task = wx.request({
-            url: `${getApiHost()}${options.url}`,
-            data: options.data || {},
-            header: {
-                "content-type": "application/json",
-                ...(userToken ? { Authorization: userToken } : {}),
-                ...getEnvHeaders(),
-                ...(options.header || {}),
-            },
-            timeout: options.timeout || 10000,
-            method: (options.method || "GET").toUpperCase(),
-            dataType: "json",
-            success(res) {
-                pendingMap.delete(key);
-                const body = res.data || {};
-                const { statusCode, message, data } = body;
-
-                pushLog({
-                    url: options.url,
-                    method: options.method || "GET",
-                    statusCode,
-                    message,
-                    duration: Date.now() - start,
-                    time: Date.now(),
-                    data: options.data,
-                    response: body,
-                    apiHost: runtimeEnv.APIHOST,
-                    envName: runtimeEnv.name,
-                    cookie: runtimeEnv.cookie,
-                });
-
-                if (options.isfail) {
-                    options.success && options.success(body);
-                    resolve(body);
+        waitLoginReady(options.url || "")
+            .catch(() => {
+                // ignore
+            })
+            .then(() => {
+                if (aborted) {
+                    reject({ errMsg: "request:abort" });
                     return;
                 }
 
-                if (statusCode == "1" || statusCode === 1) {
-                    options.success && options.success(data);
-                    resolve(data);
-                    return;
-                }
+                const userToken = getToken();
+                const runtimeEnv = getSelectedEnv();
+                const requestHeader = {
+                    "content-type": "application/json",
+                    ...buildAuthHeader(userToken),
+                    ...getEnvHeaders(),
+                    ...(options.header || {}),
+                };
+                task = wx.request({
+                    url: `${getApiHost()}${options.url}`,
+                    data: options.data || {},
+                    header: requestHeader,
+                    timeout: options.timeout || 10000,
+                    method: (options.method || "GET").toUpperCase(),
+                    dataType: "json",
+                    success(res) {
+                        pendingMap.delete(key);
+                        const body = res.data || {};
+                        const { statusCode, message, data } = body;
 
-                if (message == "jwt expired" || message == "成员不存在" || statusCode == "401") {
-                    clearAuth();
-                    const handled =
-                        options.onError &&
-                        options.onError({ type: "auth", message, body }) === true;
-                    if (!handled) {
-                        wx.showToast({
-                            title: "登录已失效，请重新登录",
-                            icon: "none",
+                        pushLog({
+                            url: options.url,
+                            method: options.method || "GET",
+                            statusCode,
+                            message,
+                            duration: Date.now() - start,
+                            time: Date.now(),
+                            data: options.data,
+                            response: body,
+                            header: requestHeader,
+                            apiHost: runtimeEnv.APIHOST,
+                            envName: runtimeEnv.name,
+                            cookie: runtimeEnv.cookie,
                         });
-                    }
-                    reject(body);
-                    return;
-                }
 
-                const handled =
-                    options.onError &&
-                    options.onError({ type: "business", message, body }) === true;
-                if (!handled && !options.silent) {
-                    wx.showModal({
-                        title: "系统提示",
-                        content: message || "请求失败",
-                        showCancel: false,
-                    });
-                }
-                options.fail && options.fail(body);
-                reject(body);
-            },
-            fail(err) {
-                pendingMap.delete(key);
-                pushLog({
-                    url: options.url,
-                    method: options.method || "GET",
-                    statusCode: "NETWORK_ERROR",
-                    message: err.errMsg,
-                    duration: Date.now() - start,
-                    time: Date.now(),
-                    data: options.data,
-                    response: err,
+                        if (options.isfail) {
+                            options.success && options.success(body);
+                            resolve(body);
+                            return;
+                        }
+
+                        if (statusCode == "1" || statusCode === 1) {
+                            options.success && options.success(data);
+                            resolve(data);
+                            return;
+                        }
+
+                        if (message == "jwt expired" || statusCode == "401" || statusCode === 401) {
+                            clearAuth();
+                            const handled =
+                                options.onError &&
+                                options.onError({ type: "auth", message, body }) === true;
+                            if (!handled) {
+                                wx.showToast({
+                                    title: "登录已失效，请重新登录",
+                                    icon: "none",
+                                });
+                            }
+                            reject(body);
+                            return;
+                        }
+
+                        const handled =
+                            options.onError &&
+                            options.onError({ type: "business", message, body }) === true;
+                        if (!handled && !options.silent) {
+                            wx.showModal({
+                                title: "系统提示",
+                                content: message || "请求失败",
+                                showCancel: false,
+                            });
+                        }
+                        options.fail && options.fail(body);
+                        reject(body);
+                    },
+                    fail(err) {
+                        pendingMap.delete(key);
+                        pushLog({
+                            url: options.url,
+                            method: options.method || "GET",
+                            statusCode: "NETWORK_ERROR",
+                            message: err.errMsg,
+                            duration: Date.now() - start,
+                            time: Date.now(),
+                            data: options.data,
+                            response: err,
+                            header: requestHeader,
+                            apiHost: runtimeEnv.APIHOST,
+                            envName: runtimeEnv.name,
+                            cookie: runtimeEnv.cookie,
+                        });
+                        const handled =
+                            options.onError &&
+                            options.onError({ type: "network", message: err.errMsg, body: err }) ===
+                                true;
+                        if (!handled && !options.silent) {
+                            wx.showToast({
+                                title: "网络异常，请稍后重试",
+                                icon: "none",
+                            });
+                        }
+                        options.fail && options.fail(err);
+                        reject(err);
+                    },
                 });
-                const handled =
-                    options.onError &&
-                    options.onError({ type: "network", message: err.errMsg, body: err }) === true;
-                if (!handled && !options.silent) {
-                    wx.showToast({
-                        title: "网络异常，请稍后重试",
-                        icon: "none",
-                    });
-                }
-                options.fail && options.fail(err);
-                reject(err);
-            },
-        });
 
-        pendingMap.set(key, task);
+                pendingMap.set(key, task);
+            });
     });
 
     promise.abort = () => {
+        aborted = true;
         abortPending(key);
     };
 

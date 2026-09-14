@@ -6,5 +6,5 @@
         <mx-empty text="购物车还是空的" />
     </view>
 </view>
-<mx-menu options="{{menus}}" current="{{2}}" selectColor="#CA0E2D" />
+<mx-menu options="{{menus}}" current="{{2}}" selectColor="#292B2F" />
 <debug-panel />

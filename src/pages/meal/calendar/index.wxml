@@ -1,0 +1,119 @@
+<mx-nav theme="dark" bgColor="#C45C26" title="三餐日历" />
+
+<view class="page" style="min-height: {{contentHeight}}px;">
+    <view class="period">
+        <view class="period-btn" bindtap="handlePrevMonth">上一月</view>
+        <view class="period-label">{{monthTitle}}</view>
+        <view class="period-btn" bindtap="handleNextMonth">下一月</view>
+    </view>
+
+    <view class="hero-stats">
+        <view class="hero-item">
+            <view class="hero-num">{{recordDays}}</view>
+            <view class="hero-desc">有记录天数</view>
+        </view>
+        <view class="hero-item">
+            <view class="hero-num">{{totalTimes}}</view>
+            <view class="hero-desc">本月记录</view>
+        </view>
+        <view class="hero-item">
+            <view class="hero-num">{{dayTimes}}</view>
+            <view class="hero-desc">当日条数</view>
+        </view>
+    </view>
+
+    <view class="panel">
+        <view class="panel-hd">
+            <view class="panel-title">月历</view>
+            <view class="legend">
+                <view class="legend-item">
+                    <view class="legend-dot legend-dot--has"></view>
+                    <text>有记录</text>
+                </view>
+                <view class="legend-item">
+                    <view class="legend-dot"></view>
+                    <text>无记录</text>
+                </view>
+            </view>
+        </view>
+        <view class="month-head">
+            <text wx:for="{{weekHead}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="month-grid">
+            <view
+                class="{{item.cellClass}}"
+                wx:for="{{monthDays}}"
+                wx:key="day"
+                data-day="{{item.day}}"
+                data-empty="{{item.empty}}"
+                data-has="{{item.hasRecord}}"
+                bindtap="handleDayTap"
+            >
+                <view class="month-day" wx:if="{{!item.empty}}">{{item.dayNum}}</view>
+                <view class="month-mark" wx:if="{{item.hasRecord}}"></view>
+            </view>
+        </view>
+    </view>
+
+    <view class="panel">
+        <view class="panel-head">
+            <view class="panel-title panel-title--inline">{{selectedDay}} 记录</view>
+            <view class="add-link" bindtap="handleAdd">+ 记录</view>
+        </view>
+    </view>
+
+    <view class="record-wrap" wx:for="{{records}}" wx:key="id">
+        <mx-swipe-action
+            rightButtons="{{swipeButtons}}"
+            name="{{item.id}}"
+            bind:button_tap="handleSwipeAction"
+        >
+            <view class="record">
+                <view class="record-hd">
+                    <view class="record-type">{{item.meal_type_text}}</view>
+                    <view class="record-time">{{item.timeText}}</view>
+                </view>
+
+                <view
+                    class="record-main {{item.coverUrl && (item.content || item.location) ? 'record-main--split' : ''}}"
+                    wx:if="{{item.coverUrl || item.content || item.location}}"
+                >
+                    <view
+                        class="record-cover"
+                        wx:if="{{item.coverUrl}}"
+                        data-urls="{{item.photo_urls}}"
+                        data-current="{{item.coverUrl}}"
+                        bindtap="handlePreview"
+                    >
+                        <image class="record-cover-img" src="{{item.coverUrl}}" mode="aspectFill" />
+                        <view class="record-cover-count" wx:if="{{item.photoCount > 1}}">{{item.photoCount}}张</view>
+                    </view>
+                    <view class="record-info" wx:if="{{item.content || item.location}}">
+                        <view class="record-location" wx:if="{{item.location}}">{{item.location}}</view>
+                        <view class="record-content" wx:if="{{item.content}}">{{item.content}}</view>
+                    </view>
+                </view>
+            </view>
+        </mx-swipe-action>
+    </view>
+
+    <view class="empty" wx:if="{{!dayLoading && !records.length}}">
+        <view class="empty-art" aria-hidden="true">
+            <view class="empty-plate">
+                <view class="empty-plate-inner">
+                    <view class="empty-steam s1"></view>
+                    <view class="empty-steam s2"></view>
+                    <view class="empty-steam s3"></view>
+                    <view class="empty-bowl"></view>
+                </view>
+            </view>
+        </view>
+        <view class="empty-title">这天还没有三餐记录</view>
+        <view class="empty-desc">拍张照片，记下那天吃了什么</view>
+        <view class="empty-cta" hover-class="empty-cta--hover" bindtap="handleAdd">去记录一餐</view>
+    </view>
+
+    <mx-safe-area />
+</view>
+
+<debug-panel />

@@ -1,0 +1,124 @@
+<mx-nav theme="light" title="{{title}}" />
+
+<view class="page page--with-actions" style="min-height: {{contentHeight}}px;">
+    <view class="tip tip--center" wx:if="{{loading}}">加载中...</view>
+    <view class="empty-wrap" wx:if="{{!loading && empty}}">
+        <mx-empty text="未找到该物品" />
+    </view>
+
+    <block wx:if="{{detail && !loading}}">
+        <view class="hero">
+            <view class="hero-name">{{detail.name}}</view>
+            <view class="hero-meta">
+                <text wx:if="{{detail.category_name}}">{{detail.category_name}}</text>
+                <text wx:if="{{detail.storage_name}}"> · {{detail.storage_name}}</text>
+                <text wx:if="{{detail.status_text}}"> · {{detail.status_text}}</text>
+            </view>
+            <view class="photos" wx:if="{{photoUrls.length}}">
+                <image
+                    class="photo"
+                    wx:for="{{photoUrls}}"
+                    wx:key="*this"
+                    src="{{item}}"
+                    mode="aspectFill"
+                    data-url="{{item}}"
+                    bindtap="handlePreviewPhoto"
+                />
+            </view>
+        </view>
+
+        <view class="section" wx:for="{{sections}}" wx:key="key">
+            <view class="section-title">{{item.title}}</view>
+            <view class="section-rows">
+                <view
+                    class="row {{row.compact ? 'row--compact' : ''}} {{row.linkId ? 'row--link' : ''}}"
+                    wx:for="{{item.rows}}"
+                    wx:for-item="row"
+                    wx:key="key"
+                    data-mode="{{row.linkMode}}"
+                    data-id="{{row.linkId}}"
+                    data-label="{{row.value}}"
+                    bindtap="handleFieldLink"
+                >
+                    <view class="label label--{{row.label.length}}">{{row.label}}</view>
+                    <view class="value path-value" wx:if="{{row.pathOptions.length}}">
+                        <block
+                            wx:for="{{row.pathOptions}}"
+                            wx:for-item="path"
+                            wx:for-index="pathIndex"
+                            wx:key="id"
+                        >
+                            <text
+                                class="path-link"
+                                data-mode="{{row.linkMode}}"
+                                data-id="{{path.id}}"
+                                data-label="{{path.label}}"
+                                catchtap="handlePathLink"
+                            >{{path.name}}</text>
+                            <text class="path-separator" wx:if="{{pathIndex < row.pathOptions.length - 1}}"> / </text>
+                        </block>
+                    </view>
+                    <view class="value {{row.multiline ? 'is-multi' : ''}}" wx:else>{{row.value}}</view>
+                    <view
+                        class="schematic-btn"
+                        hover-class="schematic-btn--hover"
+                        wx:if="{{row.schematicUrl}}"
+                        data-url="{{row.schematicUrl}}"
+                        catchtap="handlePreviewSchematic"
+                    >
+                        <view class="location-icon">
+                            <view class="location-icon-dot"></view>
+                        </view>
+                    </view>
+                </view>
+            </view>
+        </view>
+
+        <view class="section related-section" wx:if="{{relatedGoods.length}}">
+            <view class="section-title">关联物品</view>
+            <view
+                class="related-item"
+                hover-class="related-item--hover"
+                wx:for="{{relatedGoods}}"
+                wx:key="id"
+                data-id="{{item.id}}"
+                bindtap="handleRelatedGoods"
+            >
+                <image
+                    class="related-thumb"
+                    wx:if="{{item.photo_urls[0]}}"
+                    src="{{item.photo_urls[0]}}"
+                    mode="aspectFill"
+                />
+                <view class="related-placeholder" wx:else>物</view>
+                <view class="related-main">
+                    <view class="related-name">{{item.name}}</view>
+                    <view class="related-meta">
+                        <text wx:if="{{item.category_name}}">{{item.category_name}}</text>
+                        <text wx:if="{{item.storage_name}}">{{item.category_name ? ' · ' : ''}}{{item.storage_name}}</text>
+                        <text wx:if="{{item.status_text}}"> · {{item.status_text}}</text>
+                    </view>
+                </view>
+                <view class="related-arrow">›</view>
+            </view>
+        </view>
+
+        <block wx:if="{{canWrite}}">
+        <mx-foot-btns
+            styleType="double"
+            mainBtnText="编辑"
+            mainBtnType="primary"
+            mainBtnColor="#292B2F"
+            minorBtnText="删除"
+            minorBtnType="ghost"
+            minorBtnColor="#a25248"
+            zIndex="{{30}}"
+            bind:foot_btns_main="handleEdit"
+            bind:foot_btns_minor="handleDelete"
+        />
+        </block>
+    </block>
+
+    <mx-safe-area wx:if="{{!detail || loading || !canWrite}}" />
+</view>
+<debug-panel />

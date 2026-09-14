@@ -1,0 +1,29 @@
+<mx-nav theme="light" title="{{title}}" />
+
+<view class="page" style="min-height: {{contentHeight}}px;">
+    <view class="tip tip--center" wx:if="{{loading}}">加载中...</view>
+    <view class="empty-wrap" wx:if="{{!loading && empty}}">
+        <mx-empty text="未找到该日记" />
+    </view>
+
+    <block wx:if="{{detail && !loading}}">
+        <view class="hero">
+            <view class="hero-day">{{detail.day}}</view>
+            <view class="hero-meta">
+                <text wx:if="{{detail.week}}">{{detail.week}}</text>
+                <text wx:if="{{detail.affiliation_name}}"> · {{detail.affiliation_name}}</text>
+                <text wx:if="{{detail.is_repair_text}}" class="hero-repair"> · {{detail.is_repair_text}}</text>
+            </view>
+            <view class="tags" wx:if="{{tags.length}}">
+                <text class="tag" wx:for="{{tags}}" wx:key="*this">{{item}}</text>
+            </view>
+        </view>
+
+        <view class="body">
+            <text class="body-text" user-select>{{detail.content_full || detail.content}}</text>
+        </view>
+    </block>
+
+    <mx-safe-area />
+</view>
+<debug-panel />

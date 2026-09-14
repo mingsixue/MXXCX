@@ -1,7 +1,7 @@
 {
-    "name": "mxxcx",
+    "name": "xcx-lnnx",
     "version": "1.0.0",
-    "description": "MXXCX微信小程序开发基础框架",
+    "description": "流年凝雪",
     "main": "index.js",
     "scripts": {
         "start": "cross-env NODE_ENV=dev gulp watch",
@@ -19,7 +19,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git@github.com:mingsixue/mxxcx.git"
+        "url": "git@github.com:mingsixue/xcx-lnnx.git"
     },
     "author": "",
     "license": "ISC",

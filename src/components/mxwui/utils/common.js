@@ -1,5 +1,5 @@
 import { COLOR } from "./theme";
-const HOME_URL = "/pages/index/index",
+const HOME_URL = "/pages/zmc/index",
     DEFAULT_ICON = "arrows_left",
     DEFAULT_ICON_HOME = "home",
     AVATAR = "https://cdn.mingsixue.com/xcx/MXWUI/avatar.png",

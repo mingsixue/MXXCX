@@ -14,5 +14,5 @@
         />
     </view>
 </view>
-<mx-menu options="{{menus}}" current="{{1}}" selectColor="#CA0E2D" />
+<mx-menu options="{{menus}}" current="{{1}}" selectColor="#292B2F" />
 <debug-panel />

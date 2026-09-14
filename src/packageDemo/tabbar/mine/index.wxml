@@ -10,5 +10,5 @@
         <mx-list-basic label="设置" arrows="{{true}}" showLine="{{false}}" />
     </view>
 </view>
-<mx-menu options="{{menus}}" current="{{3}}" selectColor="#CA0E2D" />
+<mx-menu options="{{menus}}" current="{{3}}" selectColor="#292B2F" />
 <debug-panel />

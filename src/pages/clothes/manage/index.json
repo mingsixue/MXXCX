@@ -1,0 +1,8 @@
+{
+    "usingComponents": {
+        "mx-safe-area": "/components/mxwui/safe-area/index",
+        "mx-nav": "/components/mxwui/nav/index"
+    },
+    "navigationStyle": "custom",
+    "navigationBarTextStyle": "black"
+}

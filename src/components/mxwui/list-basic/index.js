@@ -1,5 +1,8 @@
 import { COLOR } from "../utils/common";
 Component({
+    options: {
+        addGlobalClass: true,
+    },
     properties: {
         label: { type: String, value: "" },
         labelColor: { type: String, value: "" },

@@ -1,8 +1,8 @@
-<mx-nav theme="light" title="MXXCX" />
+<mx-nav theme="light" title="流年凝雪" />
 <view class="page-index">
     <view class="hero">
-        <view class="title">MXXCX 框架</view>
-        <view class="desc">原生小程序开发框架 · MXWUI · 基建工具 · 页面模版</view>
+        <view class="title">流年凝雪</view>
+        <view class="desc">记录日常 · 管理家务 · 子明词</view>
         <view class="meta">版本 {{version}} · {{env}} · {{isLogin ? '已登录' : '未登录'}}</view>
     </view>
 
@@ -20,7 +20,7 @@
             </view>
         </view>
     </block>
-
-    <mx-safe-area />
-    <debug-panel />
 </view>
+
+<mx-menu options="{{menus}}" current="{{0}}" selectColor="#292B2F" />
+<debug-panel />

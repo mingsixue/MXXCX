@@ -1,0 +1,179 @@
+<mx-nav theme="dark" bgColor="#A02731" title="子明词" />
+<view
+    class="font-mask"
+    wx:if="{{fontMenuOpen}}"
+    bind:tap="handleCloseFontMenu"
+></view>
+
+<view class="page-detail" style="height: {{contentHeight}}px;">
+    <block wx:if="{{detail && !loading}}">
+        <view class="head">
+            <view class="seal {{detail.type == 3 ? 'seal--modern' : ''}}">
+                <block wx:if="{{detail.type == 3}}">
+                    <text class="seal-line">現代</text>
+                    <text class="seal-line">詩</text>
+                </block>
+                <text wx:else>{{detail.sealText}}</text>
+                <view class="seal-frame"></view>
+            </view>
+            <view class="head-main">
+                <view class="title">{{detail.title || '无题'}}</view>
+                <view class="meta" wx:if="{{metaItems.length || detail.festival}}">
+                    <text
+                        class="meta-item"
+                        wx:for="{{metaItems}}"
+                        wx:key="*this"
+                    >{{item}}</text>
+                    <text class="meta-festival" wx:if="{{detail.festival}}">{{detail.festival}}</text>
+                </view>
+            </view>
+            <view class="head-metrics">
+                <view class="metric">
+                    <mx-icon name="eye" size="26" color="#9a9088" />
+                    <text class="metric-value">{{viewTotal}}</text>
+                </view>
+                <view class="metric-sep"></view>
+                <view class="metric">
+                    <mx-icon name="love_fill" size="26" color="{{liked ? '#E24B4B' : '#9a9088'}}" />
+                    <text class="metric-value">{{likeCount}}</text>
+                </view>
+            </view>
+        </view>
+
+        <view class="poem-stage" style="height: {{poemAreaHeight}}px;">
+            <view class="font-entry">
+                <view class="font-btn" bind:tap="handleToggleFontMenu">文</view>
+                <view class="font-menu" wx:if="{{fontMenuOpen}}">
+                    <view
+                        class="font-menu-item {{fontKey === item.key ? 'on' : ''}}"
+                        wx:for="{{fontOptions}}"
+                        wx:key="key"
+                        data-key="{{item.key}}"
+                        bind:tap="handleFontChange"
+                    >{{item.label}}</view>
+                </view>
+            </view>
+
+            <scroll-view
+                class="body-scroll"
+                scroll-x
+                show-scrollbar="{{false}}"
+                style="height: {{poemAreaHeight}}px;"
+            >
+                <view
+                    class="body-center {{detail.type == 2 ? 'body-center--ci' : ''}} {{detail.type == 3 ? 'body-center--modern' : ''}}"
+                    style="height: {{poemAreaHeight}}px;"
+                >
+                    <view class="body-row {{fontLoading ? 'is-font-loading' : ''}}">
+                        <view class="poem-wrap {{detail.type == 2 ? 'poem-wrap--ci' : ''}}">
+                            <view
+                                class="body body--vertical {{detail.type == 2 ? 'body--ci' : ''}}"
+                                style="font-family: {{containerFamily}};"
+                            >
+                                <view
+                                    class="line {{runs.length === 1 && !runs[0].text ? 'line--gap' : ''}}"
+                                    wx:for="{{lineRuns}}"
+                                    wx:for-item="runs"
+                                    wx:key="index"
+                                    style="font-size: {{poemFontPx}}px;"
+                                >
+                                    <block wx:if="{{runs.length === 1 && !runs[0].text}}">
+                                        <text>　</text>
+                                    </block>
+                                    <block wx:else>
+                                        <text
+                                            wx:for="{{runs}}"
+                                            wx:for-item="run"
+                                            wx:key="index"
+                                            style="font-family: {{run.family}};"
+                                        >{{run.text}}</text>
+                                    </block>
+                                </view>
+                            </view>
+                            <view class="sign-col">
+                                <view class="series-mark" wx:if="{{seriesWatermark}}">{{seriesWatermark}}</view>
+                                <view class="stamp">
+                                    <text class="stamp-char">纳</text>
+                                    <text class="stamp-char">兰</text>
+                                    <text class="stamp-char">忱</text>
+                                </view>
+                            </view>
+                            <view
+                                class="like-action {{liked ? 'on' : ''}} {{likePending ? 'pending' : ''}}"
+                                style="margin-top: {{likeOffsetPx}}px;"
+                                bind:tap="handleToggleLike"
+                            >
+                                <mx-icon name="love_fill" size="64" color="{{liked ? '#E24B4B' : '#D5CFC6'}}" />
+                                <text class="like-action-text">{{liked ? '感谢您的喜欢' : '喜欢就点赞一下'}}</text>
+                            </view>
+                        </view>
+                    </view>
+                </view>
+            </scroll-view>
+        </view>
+
+        <view class="adjacent">
+            <view
+                class="adj adj--prev {{prev ? '' : 'adj--empty'}}"
+                data-key="{{prev.key}}"
+                bind:tap="handleAdjacent"
+            >
+                <view class="adj-label">上一首</view>
+                <view class="adj-title">{{prev ? prev.title : '已是篇首'}}</view>
+            </view>
+            <view
+                class="adj adj--next {{next ? '' : 'adj--empty'}}"
+                data-key="{{next.key}}"
+                bind:tap="handleAdjacent"
+            >
+                <view class="adj-label">下一首</view>
+                <view class="adj-title">{{next ? next.title : '已是篇末'}}</view>
+            </view>
+        </view>
+    </block>
+
+    <view class="empty-wrap" wx:if="{{!loading && empty}}">
+        <mx-empty text="诗词不存在" />
+    </view>
+
+    <view class="loading-scene" wx:if="{{loading}}">
+        <view class="loading-scene__mist"></view>
+        <view class="loading-scene__columns" aria-hidden="true">
+            <view class="loading-scene__col"></view>
+            <view class="loading-scene__col"></view>
+            <view class="loading-scene__col"></view>
+            <view class="loading-scene__col"></view>
+            <view class="loading-scene__col"></view>
+        </view>
+        <view class="loading-scene__brand">
+            <view class="loading-scene__char">子</view>
+            <view class="loading-scene__char">明</view>
+            <view class="loading-scene__char">詞</view>
+        </view>
+        <view class="loading-scene__seal">
+            <view class="loading-scene__seal-char">忱</view>
+            <view class="loading-scene__seal-frame"></view>
+        </view>
+        <view class="loading-scene__hint">
+            <view class="loading-scene__brush"></view>
+            <view class="loading-scene__hint-text">
+                <text class="loading-scene__hint-char">展</text>
+                <text class="loading-scene__hint-char">卷</text>
+                <text class="loading-scene__hint-char">中</text>
+            </view>
+        </view>
+    </view>
+</view>
+
+<view
+    class="like-burst like-burst--{{likeBurstPhase}}"
+    wx:if="{{likeBurst}}"
+>
+    <view class="like-burst-heart like-burst-heart--soft">
+        <mx-icon name="love_fill" size="400" color="#D4A8A8" stroke="12rpx" />
+    </view>
+    <view class="like-burst-heart like-burst-heart--bright">
+        <mx-icon name="love_fill" size="400" color="#E24B4B" />
+    </view>
+</view>
+<debug-panel />

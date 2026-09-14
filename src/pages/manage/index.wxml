@@ -1,0 +1,24 @@
+<mx-nav theme="light" title="管理" />
+
+<view class="menu-page menu-page--tabbar">
+    <view class="menu-list">
+        <view
+            class="menu-card"
+            hover-class="menu-card--hover"
+            wx:for="{{entries}}"
+            wx:key="path"
+            data-path="{{item.path}}"
+            bindtap="handleEntry"
+        >
+            <view class="menu-icon menu-icon--{{item.tone}}">{{item.mark}}</view>
+            <view class="menu-main">
+                <view class="menu-title">{{item.title}}</view>
+                <view class="menu-desc">{{item.desc}}</view>
+            </view>
+            <view class="menu-arrow">›</view>
+        </view>
+    </view>
+</view>
+
+<mx-menu options="{{menus}}" current="{{2}}" selectColor="#292B2F" />
+<debug-panel />

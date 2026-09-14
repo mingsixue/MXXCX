@@ -1,0 +1,26 @@
+<mx-nav theme="light" title="物品管理" bgColor="#f5f6f8" />
+
+<view class="page">
+    <view class="entry-list">
+        <view
+            class="entry-card"
+            hover-class="entry-card--hover"
+            wx:for="{{entries}}"
+            wx:key="mark"
+            data-mode="{{item.mode}}"
+            data-path="{{item.path}}"
+            bindtap="handleEntry"
+        >
+            <view class="entry-icon entry-icon--{{item.tone}}">{{item.mark}}</view>
+            <view class="entry-main">
+                <view class="entry-title">{{item.title}}</view>
+                <view class="entry-desc">{{item.desc}}</view>
+            </view>
+            <view class="entry-arrow">›</view>
+        </view>
+    </view>
+
+    <view class="footer-tip">让每一件物品都有迹可循</view>
+    <mx-safe-area />
+</view>
+<debug-panel />

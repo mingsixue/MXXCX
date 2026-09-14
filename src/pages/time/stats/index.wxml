@@ -1,0 +1,153 @@
+<mx-nav theme="dark" bgColor="#1A6B8A" title="时间统计" />
+
+<view class="page" style="min-height: {{contentHeight}}px;">
+    <view class="tabs">
+        <view
+            class="tab {{item.on ? 'tab--on' : ''}}"
+            wx:for="{{tabItems}}"
+            wx:key="key"
+            data-tab="{{item.key}}"
+            bindtap="handleTab"
+        >{{item.name}}</view>
+    </view>
+
+    <view class="period">
+        <view class="period-btn" bindtap="handlePrev">{{prevLabel}}</view>
+        <view class="period-label">{{periodLabel}}</view>
+        <view class="period-btn" bindtap="handleNext">{{nextLabel}}</view>
+    </view>
+
+    <view class="hero-stats">
+        <view class="hero-item">
+            <view class="hero-num">{{workText}}</view>
+            <view class="hero-desc">上班</view>
+        </view>
+        <view class="hero-item">
+            <view class="hero-num">{{sleepText}}</view>
+            <view class="hero-desc">睡觉</view>
+        </view>
+        <view class="hero-item" wx:if="{{tab === 'day'}}">
+            <view class="hero-num">{{mealText}}</view>
+            <view class="hero-desc">吃饭 · {{mealCount}}次</view>
+        </view>
+        <view class="hero-item" wx:else>
+            <view class="hero-num">{{activeDays}}</view>
+            <view class="hero-desc">有记录天数</view>
+        </view>
+    </view>
+
+    <view class="dim-grid" wx:if="{{tab !== 'day' && dimCards.length}}">
+        <view class="dim-card" wx:for="{{dimCards}}" wx:key="key">
+            <view class="dim-name">{{item.name}}</view>
+            <view class="dim-val">{{item.value}}</view>
+        </view>
+    </view>
+
+    <view class="panel" wx:if="{{tab === 'day'}}">
+        <view class="panel-title">当日消耗</view>
+        <view class="stat-row">
+            <text>上班</text>
+            <text>{{workText}}</text>
+        </view>
+        <view class="stat-sub" wx:for="{{workLines}}" wx:key="key">
+            <text>{{item.name}}</text>
+            <text>{{item.range}} {{item.text}}</text>
+        </view>
+        <view class="stat-row">
+            <text>如厕</text>
+            <text>{{toiletCount}}次 · {{toiletText}}</text>
+        </view>
+        <view class="stat-row" wx:if="{{meetingCount || (meetingText && meetingText !== '0分')}}">
+            <text>开会</text>
+            <text>{{meetingCount}}次 · {{meetingText}}</text>
+        </view>
+        <view class="stat-row">
+            <text>吃饭</text>
+            <text>{{mealCount}}次 · {{mealText}}</text>
+        </view>
+        <view class="stat-sub" wx:for="{{mealLines}}" wx:key="key">
+            <text>{{item.name}}</text>
+            <text>{{item.range}} {{item.text}}</text>
+        </view>
+        <view class="stat-row">
+            <text>睡觉</text>
+            <text>{{sleepText}}</text>
+        </view>
+        <view class="stat-sub" wx:for="{{sleepLines}}" wx:key="key">
+            <text>{{item.name}}</text>
+            <text>{{item.range}} {{item.text}}</text>
+        </view>
+        <view class="stat-row" wx:if="{{transportText && transportText !== '0分'}}">
+            <text>交通</text>
+            <text>{{transportText}}</text>
+        </view>
+        <view class="stat-sub" wx:for="{{transportLines}}" wx:key="key">
+            <text>{{item.name}}</text>
+            <text>{{item.count}}次 · {{item.text}}</text>
+        </view>
+        <view class="stat-row" wx:if="{{activityText && activityText !== '0分'}}">
+            <text>活动</text>
+            <text>{{activityText}}</text>
+        </view>
+        <view class="stat-sub" wx:for="{{activityLines}}" wx:key="key">
+            <text>{{item.name}}</text>
+            <text>{{item.count}}次 · {{item.text}}</text>
+        </view>
+        <view class="stat-row" wx:for="{{customs}}" wx:key="label">
+            <text>{{item.label}}</text>
+            <text>{{item.count}}次 · {{item.text}}</text>
+        </view>
+
+        <view class="panel-title panel-title--gap">当日片段</view>
+        <view class="record" wx:for="{{segments}}" wx:key="start_time">
+            <text class="record-time">{{item.start_clock}} - {{item.end_clock}}</text>
+            <text class="record-label">{{item.name}}</text>
+            <text class="record-dur">{{item.text}}</text>
+        </view>
+        <view class="empty-card" wx:if="{{!loading && !segments.length}}">
+            <view class="empty-title">暂无片段</view>
+            <view class="empty-desc">这天还没有时间记录</view>
+        </view>
+    </view>
+
+    <view class="panel" wx:if="{{tab === 'week'}}">
+        <view class="panel-title">本周上班走势</view>
+        <view class="week-chart">
+            <view
+                class="week-col"
+                wx:for="{{weekDays}}"
+                wx:key="day"
+                data-day="{{item.day}}"
+                bindtap="handleDayTap"
+            >
+                <view class="week-ml">{{item.barText}}</view>
+                <view class="week-bar-wrap">
+                    <view class="week-bar" style="height: {{item.barHeight}}rpx;"></view>
+                </view>
+                <view class="week-label">周{{item.label}}</view>
+                <view class="week-sub">{{item.toilet_count}}厕</view>
+            </view>
+        </view>
+    </view>
+
+    <view class="panel" wx:if="{{tab === 'month'}}">
+        <view class="panel-title">本月日历</view>
+        <view class="month-head">
+            <text wx:for="{{weekHead}}" wx:key="*this">{{item}}</text>
+        </view>
+        <view class="month-grid">
+            <view
+                class="month-cell {{item.cellClass}}"
+                wx:for="{{monthDays}}"
+                wx:key="day"
+                data-day="{{item.day}}"
+                bindtap="handleDayTap"
+            >
+                <view class="month-num">{{item.dayNum}}</view>
+                <view class="month-ml" wx:if="{{item.workShort}}">{{item.workShort}}</view>
+            </view>
+        </view>
+    </view>
+
+    <mx-safe-area />
+</view>

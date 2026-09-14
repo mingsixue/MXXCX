@@ -1,0 +1,93 @@
+<mx-nav theme="light" title="{{title}}" />
+
+<view class="page page--with-actions" style="min-height: {{contentHeight}}px;">
+    <view class="tip tip--center" wx:if="{{loading}}">加载中...</view>
+    <view class="empty-wrap" wx:if="{{!loading && empty}}">
+        <mx-empty text="未找到该衣物" />
+    </view>
+
+    <block wx:if="{{detail && !loading}}">
+        <view class="hero">
+            <view class="hero-name">{{detail.name}}</view>
+            <view class="hero-meta">
+                <text wx:if="{{detail.type_text}}">{{detail.type_text}}</text>
+                <text wx:if="{{detail.season_text}}"> · {{detail.season_text}}</text>
+                <text wx:if="{{detail.status_text}}"> · {{detail.status_text}}</text>
+            </view>
+            <view class="photos" wx:if="{{photoUrls.length}}">
+                <image
+                    class="photo"
+                    wx:for="{{photoUrls}}"
+                    wx:key="*this"
+                    src="{{item}}"
+                    mode="aspectFill"
+                    data-url="{{item}}"
+                    bindtap="handlePreviewPhoto"
+                />
+            </view>
+        </view>
+
+        <view class="section" wx:for="{{sections}}" wx:key="key">
+            <view class="section-title">{{item.title}}</view>
+            <view class="section-rows">
+                <view
+                    class="row {{row.compact ? 'row--compact' : ''}}"
+                    wx:for="{{item.rows}}"
+                    wx:for-item="row"
+                    wx:key="key"
+                >
+                    <view class="label label--{{row.label.length}}">{{row.label}}</view>
+                    <view class="value {{row.multiline ? 'is-multi' : ''}}">{{row.value}}</view>
+                </view>
+            </view>
+        </view>
+
+        <view class="section related-section" wx:if="{{relatedItems.length}}">
+            <view class="section-title">关联衣物</view>
+            <view
+                class="related-item"
+                hover-class="related-item--hover"
+                wx:for="{{relatedItems}}"
+                wx:key="id"
+                data-id="{{item.id}}"
+                bindtap="handleRelated"
+            >
+                <image
+                    class="related-thumb"
+                    wx:if="{{item.photo_urls[0]}}"
+                    src="{{item.photo_urls[0]}}"
+                    mode="aspectFill"
+                />
+                <view class="related-placeholder" wx:else>衣</view>
+                <view class="related-main">
+                    <view class="related-name">{{item.name}}</view>
+                    <view class="related-meta">
+                        <text wx:if="{{item.type_text}}">{{item.type_text}}</text>
+                        <text wx:if="{{item.season_text}}"> · {{item.season_text}}</text>
+                        <text wx:if="{{item.applicable_text}}"> · {{item.applicable_text}}</text>
+                        <text wx:if="{{item.status_text}}"> · {{item.status_text}}</text>
+                    </view>
+                </view>
+                <view class="related-arrow">›</view>
+            </view>
+        </view>
+
+        <block wx:if="{{canWrite}}">
+        <mx-foot-btns
+            styleType="double"
+            mainBtnText="编辑"
+            mainBtnType="primary"
+            mainBtnColor="#292B2F"
+            minorBtnText="删除"
+            minorBtnType="ghost"
+            minorBtnColor="#a25248"
+            zIndex="{{30}}"
+            bind:foot_btns_main="handleEdit"
+            bind:foot_btns_minor="handleDelete"
+        />
+        </block>
+    </block>
+
+    <mx-safe-area wx:if="{{!detail || loading || !canWrite}}" />
+</view>
+<debug-panel />
