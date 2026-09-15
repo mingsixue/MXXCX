@@ -57,18 +57,19 @@
             <scroll-view
                 class="body-scroll"
                 scroll-x
+                enable-flex
                 show-scrollbar="{{false}}"
                 style="height: {{poemAreaHeight}}px;"
             >
                 <view
                     class="body-center {{detail.type == 2 ? 'body-center--ci' : ''}} {{detail.type == 3 ? 'body-center--modern' : ''}}"
-                    style="height: {{poemAreaHeight}}px;"
+                    style="height: {{poemAreaHeight}}px; width: {{poemCenterWidthPx}}px; min-width: {{poemCenterWidthPx}}px;"
                 >
                     <view class="body-row {{fontLoading ? 'is-font-loading' : ''}}">
                         <view class="poem-wrap {{detail.type == 2 ? 'poem-wrap--ci' : ''}}">
                             <view
                                 class="body body--vertical {{detail.type == 2 ? 'body--ci' : ''}}"
-                                style="font-family: {{containerFamily}};"
+                                style="font-family: {{containerFamily}}; width: {{poemBodyWidthPx}}px;"
                             >
                                 <view
                                     class="line {{runs.length === 1 && !runs[0].text ? 'line--gap' : ''}}"

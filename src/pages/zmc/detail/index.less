@@ -207,20 +207,20 @@
 .body-scroll {
     width: 100%;
     min-height: 0;
+    // enable-flex：真机 scroll-view 默认不吃子级 flex，居中会失效
+    display: flex;
     // 确保横向溢出可滚，而不是被父级裁切
     overflow: hidden;
 }
 
 .body-center {
-    // min-width:100% 保证不超出时仍占满并可水平居中；
-    // width:max-content 保证超出时撑开，便于横向滚动
+    // 宽由 JS 显式写入（真机 max-content 不可靠）；至少占满一屏以便居中
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    min-width: 100%;
-    width: max-content;
+    flex-shrink: 0;
     height: 100%;
     padding: 0 40rpx;
 
@@ -254,7 +254,10 @@
 .poem-wrap {
     position: relative;
     flex-shrink: 0;
+    // 跟随正文显式宽度，避免竖排固有尺寸塌缩后居中错位
+    display: inline-block;
     max-height: 100%;
+    vertical-align: top;
 
     // 词：右侧预留落款槽，系列水印 + 纳兰忱印章完整展示
     &--ci {
@@ -319,6 +322,7 @@
 
 .body--vertical {
     box-sizing: border-box;
+    display: block;
     flex-shrink: 0;
     max-height: 100%;
     // 首列在左侧，多留左内边距，避免半个字贴边被裁
@@ -327,6 +331,7 @@
     -webkit-writing-mode: vertical-lr;
     text-orientation: mixed;
     text-align: left;
+    // 宽度由 JS 按列数写入，勿再依赖 writing-mode 固有宽度
     height: auto;
 }
 

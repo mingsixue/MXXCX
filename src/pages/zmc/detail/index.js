@@ -283,10 +283,33 @@ function computeScreenLayout(lines = [], type) {
     let poemFontPx = Math.min(fontByH, fontByW, 46);
     poemFontPx = Math.max(Math.floor(poemFontPx), 18);
 
+    // 真机 writing-mode 常把竖排容器固有宽度算成 ~0，flex 居中的是塌缩盒，
+    // 文字向右溢出 → 左侧大片空白。按列数显式给宽，避免依赖固有尺寸。
+    const colLineHeight = 1.32;
+    const colMarginRpx = typeNum === 2 ? 2 : 4;
+    const bodyPadRpx = 16; // .body--vertical 左右 padding 12+4
+    const poemBodyWidthPx = Math.ceil(
+        colCount * poemFontPx * colLineHeight +
+            Math.max(colCount - 1, 0) * colMarginRpx * rpx +
+            bodyPadRpx * rpx,
+    );
+
+    // 词有落款槽在 poem-wrap 内；诗/曲印章在盒外，横滑时一并计入
+    const wrapExtraPx =
+        typeNum === 2 ? sealW : Math.ceil(48 * rpx);
+    const centerPadRpx =
+        typeNum === 2 ? 96 : typeNum === 3 ? 72 : 80;
+    const contentBlockW = poemBodyWidthPx + wrapExtraPx + centerPadRpx * rpx;
+    const poemCenterWidthPx = Math.ceil(
+        Math.max(windowWidth - pagePadX, contentBlockW),
+    );
+
     return {
         contentHeight,
         poemAreaHeight: Math.floor(poemAreaHeight),
         poemFontPx,
+        poemBodyWidthPx,
+        poemCenterWidthPx,
     };
 }
 
@@ -319,6 +342,8 @@ Page({
         contentHeight: 600,
         poemAreaHeight: 360,
         poemFontPx: 36,
+        poemBodyWidthPx: 0,
+        poemCenterWidthPx: 0,
         likeOffsetPx: 24,
     },
 
