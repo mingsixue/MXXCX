@@ -156,7 +156,6 @@ Page({
         const remain = PHOTO_MAX - this.data.photos.length;
         if (remain <= 0) return;
         try {
-            wx.showLoading({ title: "压缩上传中...", mask: true });
             const result = await MX.chooseAndUploadLnnxImage({
                 module: "meal",
                 count: remain,
@@ -172,8 +171,6 @@ Page({
         } catch (e) {
             if (e && e.errMsg && String(e.errMsg).indexOf("cancel") >= 0) return;
             wx.showToast({ title: (e && e.message) || "上传失败", icon: "none" });
-        } finally {
-            wx.hideLoading();
         }
     },
 

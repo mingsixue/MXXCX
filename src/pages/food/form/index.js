@@ -171,15 +171,12 @@ Page({
         const remain = 3 - this.data.photos.length;
         if (remain <= 0) return;
         try {
-            wx.showLoading({ title: "上传中...", mask: true });
             const result = await MX.chooseAndUploadLnnxImage({ module: "food", count: remain });
             const list = Array.isArray(result) ? result : result ? [result] : [];
             this.setData({ photos: this.data.photos.concat(list) });
         } catch (e) {
             if (e && e.errMsg && String(e.errMsg).indexOf("cancel") >= 0) return;
             wx.showToast({ title: (e && e.message) || "上传失败", icon: "none" });
-        } finally {
-            wx.hideLoading();
         }
     },
 

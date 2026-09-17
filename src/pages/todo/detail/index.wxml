@@ -25,6 +25,17 @@
                     wx:if="{{countdownText}}"
                 >{{countdownText}}</view>
             </view>
+            <view class="photos" wx:if="{{photoUrls.length}}">
+                <image
+                    class="photo"
+                    wx:for="{{photoUrls}}"
+                    wx:key="*this"
+                    src="{{item}}"
+                    mode="aspectFill"
+                    data-url="{{item}}"
+                    bindtap="handlePreviewPhoto"
+                />
+            </view>
         </view>
 
         <view class="section" wx:for="{{sections}}" wx:key="key">

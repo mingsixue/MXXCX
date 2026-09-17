@@ -302,7 +302,6 @@ Page({
     async handleAddPhoto() {
         if (this.data.photos.length >= 1) return;
         try {
-            wx.showLoading({ title: "上传中...", mask: true });
             const result = await MX.chooseAndUploadLnnxImage({ module: "goods", count: 1 });
             if (result && result.key) {
                 this.setData({ photos: [result] });
@@ -310,8 +309,6 @@ Page({
         } catch (e) {
             if (e && e.errMsg && String(e.errMsg).indexOf("cancel") >= 0) return;
             wx.showToast({ title: (e && e.message) || "上传失败", icon: "none" });
-        } finally {
-            wx.hideLoading();
         }
     },
 

@@ -8,6 +8,9 @@ const AFFILIATION = [
     { label: "娟", value: 2 },
 ];
 
+const PHOTO_MAX = 9;
+const IMAGES_MAX_LEN = 1000;
+
 function mapOptions(map) {
     return Object.keys(map).map((k) => ({ label: map[k], value: Number(k) }));
 }
@@ -32,6 +35,15 @@ function nowDateTime() {
     const d = new Date();
     const pad = (n) => String(n).padStart(2, "0");
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+function buildPhotos(keysStr, urls) {
+    const keys = String(keysStr || "")
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+    const list = Array.isArray(urls) ? urls : [];
+    return keys.map((key, i) => ({ key, url: list[i] || "" }));
 }
 
 Page({
@@ -60,6 +72,7 @@ Page({
         planEnd: "",
         doneTime: "",
         remark: "",
+        photos: [],
         datetimeVisible: false,
         datetimeField: "",
         datetimeTitle: "",
@@ -134,6 +147,7 @@ Page({
                 planEnd: toDateTime(detail.plan_end_time),
                 doneTime: toDateTime(detail.done_time),
                 remark: detail.remark || "",
+                photos: buildPhotos(detail.images, detail.images_urls),
                 loading: false,
             });
         } catch (e) {
@@ -221,6 +235,46 @@ Page({
         this.setData({ [field]: "" });
     },
 
+    async handleAddPhoto() {
+        const remain = PHOTO_MAX - this.data.photos.length;
+        if (remain <= 0) return;
+        try {
+            const result = await MX.chooseAndUploadLnnxImage({
+                module: "todo",
+                count: remain,
+            });
+            const list = Array.isArray(result) ? result : result ? [result] : [];
+            const next = this.data.photos.concat(list);
+            const joined = next.map((p) => p.key).join(",");
+            if (joined.length > IMAGES_MAX_LEN) {
+                wx.showToast({ title: "图片过多，请减少张数", icon: "none" });
+                return;
+            }
+            this.setData({ photos: next });
+        } catch (e) {
+            if (e && e.errMsg && String(e.errMsg).indexOf("cancel") >= 0) return;
+            wx.showToast({ title: (e && e.message) || "上传失败", icon: "none" });
+        }
+    },
+
+    handlePreviewPhoto(e) {
+        const index = Number(e.currentTarget.dataset.index);
+        const urls = (this.data.photos || []).map((p) => p && p.url).filter(Boolean);
+        if (!urls.length) return;
+        wx.previewImage({
+            current: urls[index] || urls[0],
+            urls,
+        });
+    },
+
+    handleRemovePhoto(e) {
+        const index = Number(e.currentTarget.dataset.index);
+        if (Number.isNaN(index)) return;
+        const photos = this.data.photos.slice();
+        photos.splice(index, 1);
+        this.setData({ photos });
+    },
+
     async handleSubmit() {
         if (this.data.submitting) return;
         const todoTitle = (this.data.todoTitle || "").trim();
@@ -234,6 +288,12 @@ Page({
             return;
         }
 
+        const images = this.data.photos.map((p) => p.key).filter(Boolean).join(",");
+        if (images.length > IMAGES_MAX_LEN) {
+            wx.showToast({ title: "图片过多，请减少张数", icon: "none" });
+            return;
+        }
+
         const payload = {
             title: todoTitle,
             content,
@@ -243,6 +303,7 @@ Page({
             affiliation: MX.isJuan() ? 2 : this.data.affiliation,
             assignee: (this.data.assignee || "").trim(),
             remark: (this.data.remark || "").trim(),
+            images,
             plan_start_time: toDateTime(this.data.planStart),
             plan_end_time: toDateTime(this.data.planEnd),
             done_time: toDateTime(this.data.doneTime),

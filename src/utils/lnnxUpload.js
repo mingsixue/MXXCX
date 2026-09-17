@@ -7,7 +7,7 @@ import { getApiHost, getEnvHeaders } from "./env";
 /**
  * 上传单张本地图片到 lnnx 模块接口
  * @param {string} filePath
- * @param {string} module food | medication | clothes | goods | meal
+ * @param {string} module food | medication | clothes | goods | meal | todo
  * @returns {Promise<{key: string, url: string}>}
  */
 const uploadLnnxImage = (filePath, module) => {
@@ -46,7 +46,7 @@ const uploadLnnxImage = (filePath, module) => {
 /**
  * 选择并上传图片到 lnnx 模块
  * @param {object} options
- * @param {string} options.module food | medication | clothes | goods | meal
+ * @param {string} options.module food | medication | clothes | goods | meal | todo
  * @param {number} [options.count=1] 为 1 时 resolve 单个对象，否则为数组
  * @param {string[]} [options.sourceType]
  * @returns {Promise<{key: string, url: string}|Array<{key: string, url: string}>>}
@@ -64,8 +64,16 @@ const chooseAndUploadLnnxImage = (options = {}) => {
             mediaType: ["image"],
             sourceType: options.sourceType || ["album", "camera"],
             success: async (resp) => {
+                let loadingShown = false;
                 try {
                     const files = resp.tempFiles || [];
+                    if (!files.length) {
+                        resolve(count === 1 ? undefined : []);
+                        return;
+                    }
+                    // 选图/拍照完成后再显示 loading，避免选择过程中就出现上传中
+                    wx.showLoading({ title: "上传中...", mask: true });
+                    loadingShown = true;
                     const results = [];
                     for (let i = 0; i < files.length; i++) {
                         results.push(await uploadLnnxImage(files[i].tempFilePath, module));
@@ -73,6 +81,8 @@ const chooseAndUploadLnnxImage = (options = {}) => {
                     resolve(count === 1 ? results[0] : results);
                 } catch (e) {
                     reject(e);
+                } finally {
+                    if (loadingShown) wx.hideLoading();
                 }
             },
             fail: reject,

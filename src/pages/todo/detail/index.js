@@ -59,6 +59,7 @@ Page({
         countdownText: "",
         countdownState: "",
         canWrite: false,
+        photoUrls: [],
     },
 
     onLoad(options) {
@@ -104,6 +105,7 @@ Page({
                     canDone: false,
                     countdownText: "",
                     countdownState: "",
+                    photoUrls: [],
                 });
                 return;
             }
@@ -111,6 +113,9 @@ Page({
             const countdown = buildCountdown(detail.plan_end_time, status);
             await MX.waitLnnxReady();
             const canWrite = MX.canWriteRecord(detail);
+            const photoUrls = Array.isArray(detail.images_urls)
+                ? detail.images_urls.filter(Boolean)
+                : [];
             this.setData({
                 detail,
                 sections: buildSections(detail),
@@ -120,6 +125,7 @@ Page({
                 priorityClass: PRIORITY_CLASS[Number(detail.priority)] || "low",
                 countdownText: countdown.countdownText,
                 countdownState: countdown.countdownState,
+                photoUrls,
                 loading: false,
                 empty: false,
             });
@@ -134,8 +140,16 @@ Page({
                 priorityClass: "low",
                 countdownText: "",
                 countdownState: "",
+                photoUrls: [],
             });
         }
+    },
+
+    handlePreviewPhoto(e) {
+        const url = e.currentTarget.dataset.url;
+        const urls = this.data.photoUrls || [];
+        if (!urls.length) return;
+        wx.previewImage({ current: url || urls[0], urls });
     },
 
     handleEdit() {
