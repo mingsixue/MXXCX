@@ -45,47 +45,9 @@
         "pages/diary/detail/index",
         "pages/diary/form/index"
     ],
-    "subPackages": [
-        {
-            "root": "packageDemo",
-            "name": "demo",
-            "pages": [
-                "auth/index",
-                "list/index",
-                "form/index",
-                "setting/index",
-                "login/index",
-                "result/index",
-                "skeleton/index",
-                "dialog/index",
-                "goods/index",
-                "goods-list/index",
-                "home/index",
-                "my/index",
-                "webview/index",
-                "navigate/index",
-                "subpackage-demo/index",
-                "pay/index",
-                "subscribe/index",
-                "lottie/index",
-                "safe-area/index",
-                "report/index",
-                "tabbar/home/index",
-                "tabbar/classify/index",
-                "tabbar/cart/index",
-                "tabbar/mine/index"
-            ]
-        }
-    ],
-    "preloadRule": {
-        "pages/index/index": {
-            "network": "all",
-            "packages": ["demo"]
-        }
-    },
     "window": {
         "navigationStyle": "custom",
-        "navigationBarTitleText": "MXXCX",
+        "navigationBarTitleText": "流年凝雪",
         "navigationBarBackgroundColor": "#ffffff",
         "navigationBarTextStyle": "black",
         "backgroundTextStyle": "dark",
