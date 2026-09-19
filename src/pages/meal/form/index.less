@@ -140,6 +140,79 @@
     border-radius: 16rpx;
 }
 
+.card--field-combo {
+    position: relative;
+    z-index: 30;
+}
+
+.location-combo {
+    position: relative;
+}
+
+.location-input-wrap {
+    position: relative;
+}
+
+.field-input--combo {
+    padding-right: 72rpx;
+}
+
+.location-toggle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72rpx;
+    height: 72rpx;
+    color: #b39a88;
+    font-size: 28rpx;
+    line-height: 1;
+    transition: transform 0.18s ease;
+}
+
+.location-toggle--open {
+    transform: rotate(180deg);
+    color: #c45c26;
+}
+
+.location-dropdown {
+    position: absolute;
+    top: calc(100% + 8rpx);
+    right: 0;
+    left: 0;
+    z-index: 40;
+    overflow: hidden;
+    background: #fff;
+    border: 2rpx solid #efe4db;
+    border-radius: 16rpx;
+    box-shadow: 0 12rpx 28rpx rgba(74, 47, 31, 0.12);
+}
+
+.location-dropdown-scroll {
+    max-height: 360rpx;
+}
+
+.location-dropdown-item {
+    padding: 22rpx 24rpx;
+    color: #6b5344;
+    font-size: 26rpx;
+    line-height: 1.4;
+    border-bottom: 2rpx solid #f5efe9;
+}
+
+.location-dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.location-dropdown-item--on {
+    color: #c45c26;
+    font-weight: 500;
+    background: #faf6f2;
+}
+
 .field-textarea {
     width: 100%;
     min-height: 180rpx;

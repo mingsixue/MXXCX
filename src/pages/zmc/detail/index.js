@@ -16,11 +16,11 @@ const SEAL_TEXT = {
 };
 
 const SERIES_LABELS = {
-    1: "子明词",
-    2: "山水诗",
-    3: "素雪词",
-    4: "艳雨词",
-    5: "恋娟词",
+    1: "子明詞",
+    2: "山水詩",
+    3: "素雪詞",
+    4: "艳雨詞",
+    5: "恋娟詞",
 };
 
 function getSeriesWatermark(series) {

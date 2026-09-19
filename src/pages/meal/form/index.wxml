@@ -38,16 +38,38 @@
         </view>
     </view>
 
-    <view class="card card--field">
+    <view class="card card--field {{locationDropdownVisible ? 'card--field-combo' : ''}}">
         <view class="field-label">地点</view>
-        <input
-            class="field-input"
-            placeholder="选填"
-            placeholder-class="field-placeholder"
-            value="{{location}}"
-            maxlength="100"
-            bindinput="onLocationInput"
-        />
+        <view class="location-combo">
+            <view class="location-input-wrap">
+                <input
+                    class="field-input field-input--combo"
+                    placeholder="选填，可选择历史或输入新地点"
+                    placeholder-class="field-placeholder"
+                    value="{{location}}"
+                    maxlength="100"
+                    bindinput="onLocationInput"
+                    bindfocus="onLocationFocus"
+                    bindblur="onLocationBlur"
+                />
+                <view
+                    class="location-toggle {{locationDropdownVisible ? 'location-toggle--open' : ''}}"
+                    wx:if="{{locationOptions.length}}"
+                    catchtap="onLocationToggle"
+                >▾</view>
+            </view>
+            <view class="location-dropdown" wx:if="{{locationDropdownVisible && locationFiltered.length}}">
+                <scroll-view scroll-y class="location-dropdown-scroll">
+                    <view
+                        class="location-dropdown-item {{location === item ? 'location-dropdown-item--on' : ''}}"
+                        wx:for="{{locationFiltered}}"
+                        wx:key="*this"
+                        data-value="{{item}}"
+                        catchtap="onLocationSelect"
+                    >{{item}}</view>
+                </scroll-view>
+            </view>
+        </view>
     </view>
 
     <view class="card card--field">

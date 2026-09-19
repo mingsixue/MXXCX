@@ -22,6 +22,8 @@ function buildSections(detail) {
     const basic = [];
     pushField(basic, "名称", detail.name);
     pushField(basic, "分类", detail.type_text);
+    pushCompactField(basic, "归属人", detail.affiliation_text);
+    pushCompactField(basic, "存放地", detail.place_text);
     pushCompactField(basic, "剂型", detail.drug_form_text);
     pushCompactField(basic, "用法", detail.use_way_text);
     pushCompactField(basic, "规格", detail.spec);
@@ -31,14 +33,14 @@ function buildSections(detail) {
     pushField(basic, "用量", detail.dosage);
 
     const effect = [];
-    pushField(effect, "主要功效", detail.main_effect, { multiline: true });
+    pushField(effect, "适应范围", detail.main_effect, { multiline: true });
     pushField(effect, "注意事项", detail.notes, { multiline: true });
 
     const time = [];
-    pushField(time, "购买日期", formatDateSlash(detail.buy_date));
+    pushField(time, "生产日期", formatDateSlash(detail.buy_date));
     pushField(time, "过期日期", formatDateSlash(detail.expire_date));
     pushField(time, "剩余天数", detail.remainingText);
-    pushField(time, "批号", detail.batch_no);
+    pushField(time, "生产批号", detail.batch_no);
 
     const other = [];
     pushField(other, "备注", detail.remark, { multiline: true });

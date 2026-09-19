@@ -41,7 +41,7 @@
             <view class="act-head">工作</view>
             <view class="act-grid">
                 <view
-                    class="act-btn act-btn--w3 {{item.isOpen ? 'is-on' : ''}}"
+                    class="act-btn act-btn--w2 {{item.isOpen ? 'is-on' : ''}}"
                     wx:for="{{workActions}}"
                     wx:key="key"
                     data-type="{{item.key}}"

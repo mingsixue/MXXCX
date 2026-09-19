@@ -65,6 +65,8 @@
                     <view class="manage-item-name">{{item.name}}</view>
                     <view class="manage-item-meta">
                         <text wx:if="{{item.drug_form_text}}">{{item.drug_form_text}}</text>
+                        <text wx:if="{{item.affiliation_text}}"> · {{item.affiliation_text}}</text>
+                        <text wx:if="{{item.place_text}}"> · {{item.place_text}}</text>
                         <text wx:if="{{item.status_text}}"> · {{item.status_text}}</text>
                         <text wx:if="{{item.expire_date}}"> · 至{{item.expire_date}}</text>
                     </view>

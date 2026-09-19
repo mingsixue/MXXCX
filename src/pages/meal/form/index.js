@@ -56,6 +56,13 @@ function guessMealTypeByHour() {
     return 1;
 }
 
+function filterLocations(options, keyword) {
+    const list = Array.isArray(options) ? options : [];
+    const kw = String(keyword || "").trim().toLowerCase();
+    if (!kw) return list.slice();
+    return list.filter((item) => String(item).toLowerCase().indexOf(kw) >= 0);
+}
+
 Page({
     data: {
         title: "记录三餐",
@@ -70,11 +77,15 @@ Page({
         content: "",
         contentLen: 0,
         location: "",
+        locationOptions: [],
+        locationFiltered: [],
+        locationDropdownVisible: false,
         photos: [],
     },
 
     onLoad(options) {
         const id = Number(options.id || 0);
+        this.loadLocations();
         if (id > 0) {
             this.setData({
                 id,
@@ -104,6 +115,21 @@ Page({
         });
     },
 
+    async loadLocations() {
+        try {
+            const res = await MX.get("meal/locations", { limit: 30 });
+            const list = (res && Array.isArray(res.list) ? res.list : [])
+                .map((item) => String(item || "").trim())
+                .filter(Boolean);
+            this.setData({
+                locationOptions: list,
+                locationFiltered: filterLocations(list, this.data.location),
+            });
+        } catch (e) {
+            this.setData({ locationOptions: [], locationFiltered: [] });
+        }
+    },
+
     async loadDetail(id) {
         try {
             const detail = await MX.get("meal/detail", { id });
@@ -115,6 +141,7 @@ Page({
             const mealType = Number(detail.meal_type) || 1;
             const day = String(detail.day || "").slice(0, 10);
             const content = detail.content || "";
+            const location = detail.location || "";
             this.setData({
                 day,
                 dayDisplay: formatDayDisplay(day),
@@ -122,7 +149,8 @@ Page({
                 mealTypeOptions: buildMealTypeOptions(mealType),
                 content,
                 contentLen: content.length,
-                location: detail.location || "",
+                location,
+                locationFiltered: filterLocations(this.data.locationOptions, location),
                 photos: buildPhotos(detail.photo, detail.photo_urls),
                 loading: false,
             });
@@ -140,8 +168,63 @@ Page({
         });
     },
 
+    clearLocationBlurTimer() {
+        if (this._locationBlurTimer) {
+            clearTimeout(this._locationBlurTimer);
+            this._locationBlurTimer = null;
+        }
+    },
+
+    openLocationDropdown(keyword) {
+        const locationFiltered = filterLocations(this.data.locationOptions, keyword);
+        this.clearLocationBlurTimer();
+        this.setData({
+            locationFiltered,
+            locationDropdownVisible: locationFiltered.length > 0,
+        });
+    },
+
     onLocationInput(e) {
-        this.setData({ location: (e.detail && e.detail.value) || "" });
+        const location = (e.detail && e.detail.value) || "";
+        const locationFiltered = filterLocations(this.data.locationOptions, location);
+        this.clearLocationBlurTimer();
+        this.setData({
+            location,
+            locationFiltered,
+            locationDropdownVisible: locationFiltered.length > 0,
+        });
+    },
+
+    onLocationFocus() {
+        this.openLocationDropdown("");
+    },
+
+    onLocationBlur() {
+        this.clearLocationBlurTimer();
+        this._locationBlurTimer = setTimeout(() => {
+            this.setData({ locationDropdownVisible: false });
+            this._locationBlurTimer = null;
+        }, 180);
+    },
+
+    onLocationToggle() {
+        if (this.data.locationDropdownVisible) {
+            this.clearLocationBlurTimer();
+            this.setData({ locationDropdownVisible: false });
+            return;
+        }
+        this.openLocationDropdown("");
+    },
+
+    onLocationSelect(e) {
+        const value = String(e.currentTarget.dataset.value || "").trim();
+        if (!value) return;
+        this.clearLocationBlurTimer();
+        this.setData({
+            location: value,
+            locationFiltered: filterLocations(this.data.locationOptions, value),
+            locationDropdownVisible: false,
+        });
     },
 
     onContentInput(e) {

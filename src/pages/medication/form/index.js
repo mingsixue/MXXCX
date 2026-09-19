@@ -32,6 +32,8 @@ const DRUG_FORM = {
 const USE_WAY = { 1: "内服", 2: "外用", 3: "注射" };
 const SAVE_WAY = { 1: "常温", 2: "避光密封", 3: "冷藏2-8℃", 4: "冷冻<0℃" };
 const STATUS = { 1: "正常", 2: "过期", 3: "用完" };
+const AFFILIATION = { 1: "敏", 2: "娟", 3: "通用" };
+const PLACE = { 1: "抽屉柜", 2: "药箱", 3: "冰箱" };
 const IS_RX = [
     { label: "否", value: 0 },
     { label: "是", value: 1 },
@@ -83,6 +85,12 @@ Page({
         status: 0,
         statusIndex: -1,
         statusOptions: mapOptions(STATUS),
+        affiliation: 0,
+        affiliationIndex: -1,
+        affiliationOptions: mapOptions(AFFILIATION),
+        place: 0,
+        placeIndex: -1,
+        placeOptions: mapOptions(PLACE),
         isRx: 0,
         isRxIndex: -1,
         isRxOptions: IS_RX,
@@ -90,6 +98,9 @@ Page({
         dosage: "",
         num: "",
         unit: "",
+        batchNo: "",
+        mainEffect: "",
+        notes: "",
         buyDate: "",
         expireDate: "",
         remark: "",
@@ -137,6 +148,8 @@ Page({
             const useWay = Number(detail.use_way) || 0;
             const saveWay = Number(detail.save_way) || 0;
             const status = Number(detail.status) || 0;
+            const affiliation = Number(detail.affiliation) || 0;
+            const place = Number(detail.place) || 0;
             const isRx = Number(detail.is_rx);
             this.setData({
                 name: detail.name || "",
@@ -150,12 +163,19 @@ Page({
                 saveWayIndex: findIndex(this.data.saveWayOptions, saveWay, -1),
                 status,
                 statusIndex: findIndex(this.data.statusOptions, status, -1),
+                affiliation,
+                affiliationIndex: findIndex(this.data.affiliationOptions, affiliation, -1),
+                place,
+                placeIndex: findIndex(this.data.placeOptions, place, -1),
                 isRx: Number.isNaN(isRx) ? 0 : isRx,
                 isRxIndex: findIndex(this.data.isRxOptions, Number.isNaN(isRx) ? -1 : isRx, -1),
                 spec: detail.spec || "",
                 dosage: detail.dosage || "",
                 num: detail.num != null && detail.num !== "" ? String(detail.num) : "",
                 unit: detail.unit || "",
+                batchNo: detail.batch_no || "",
+                mainEffect: detail.main_effect || "",
+                notes: detail.notes || "",
                 buyDate: toDateOnly(detail.buy_date),
                 expireDate: toDateOnly(detail.expire_date),
                 remark: detail.remark || "",
@@ -181,6 +201,15 @@ Page({
     },
     onUnitChange(e) {
         this.setData({ unit: (e.detail && e.detail.value) || "" });
+    },
+    onBatchNoChange(e) {
+        this.setData({ batchNo: (e.detail && e.detail.value) || "" });
+    },
+    onMainEffectChange(e) {
+        this.setData({ mainEffect: (e.detail && e.detail.value) || "" });
+    },
+    onNotesChange(e) {
+        this.setData({ notes: (e.detail && e.detail.value) || "" });
     },
     onRemarkChange(e) {
         this.setData({ remark: (e.detail && e.detail.value) || "" });
@@ -215,6 +244,18 @@ Page({
         const statusIndex = Number(e.detail.value) || 0;
         const opt = this.data.statusOptions[statusIndex];
         this.setData({ statusIndex, status: opt ? opt.value : 0 });
+    },
+    onAffiliationChange(e) {
+        if (!(e.detail && e.detail.type === "selector")) return;
+        const affiliationIndex = Number(e.detail.value) || 0;
+        const opt = this.data.affiliationOptions[affiliationIndex];
+        this.setData({ affiliationIndex, affiliation: opt ? opt.value : 0 });
+    },
+    onPlaceChange(e) {
+        if (!(e.detail && e.detail.type === "selector")) return;
+        const placeIndex = Number(e.detail.value) || 0;
+        const opt = this.data.placeOptions[placeIndex];
+        this.setData({ placeIndex, place: opt ? opt.value : 0 });
     },
     onIsRxChange(e) {
         if (!(e.detail && e.detail.type === "selector")) return;
@@ -291,11 +332,6 @@ Page({
             wx.showToast({ title: "请选择状态", icon: "none" });
             return;
         }
-        if (this.data.isRxIndex < 0) {
-            wx.showToast({ title: "请选择是否处方药", icon: "none" });
-            return;
-        }
-
         const payload = {
             name,
             type: this.data.type,
@@ -303,10 +339,12 @@ Page({
             use_way: this.data.useWay,
             save_way: this.data.saveWay,
             status: this.data.status,
-            is_rx: this.data.isRx,
             spec: (this.data.spec || "").trim(),
             dosage: (this.data.dosage || "").trim(),
             unit: (this.data.unit || "").trim(),
+            batch_no: (this.data.batchNo || "").trim(),
+            main_effect: (this.data.mainEffect || "").trim(),
+            notes: (this.data.notes || "").trim(),
             photo: this.data.photos.map((p) => p.key).join(","),
             remark: (this.data.remark || "").trim(),
             buy_date: this.data.buyDate || "",
@@ -314,6 +352,15 @@ Page({
         };
         if (this.data.num !== "") {
             payload.num = Number(this.data.num) || 0;
+        }
+        if (this.data.isRxIndex >= 0) {
+            payload.is_rx = this.data.isRx;
+        }
+        if (this.data.affiliationIndex >= 0) {
+            payload.affiliation = this.data.affiliation;
+        }
+        if (this.data.placeIndex >= 0) {
+            payload.place = this.data.place;
         }
 
         this.setData({ submitting: true });

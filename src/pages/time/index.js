@@ -77,6 +77,7 @@ const WORK_TYPES = [
     { key: "上午班", mark: "上", start: "上午班", end: "结束上午班", ing: "上午班中" },
     { key: "下午班", mark: "下", start: "下午班", end: "结束下午班", ing: "下午班中" },
     { key: "晚上班", mark: "晚", start: "晚上班", end: "结束晚上班", ing: "晚上班中" },
+    { key: "自由工作", mark: "自", start: "自由工作", end: "结束自由工作", ing: "自由工作中" },
 ];
 
 const MEAL_TYPES = [
@@ -87,8 +88,9 @@ const MEAL_TYPES = [
 ];
 
 const SLEEP_TYPES = [
+    { key: "起床", mark: "起", instant: true, start: "起床" },
     { key: "午睡", mark: "午", start: "午睡", end: "结束午睡", ing: "午睡中" },
-    { key: "晚上", mark: "夜", start: "就寝", end: "醒来", ing: "就寝中" },
+    { key: "就寝", mark: "寝", instant: true, start: "就寝" },
     { key: "零星", mark: "零", start: "零星睡觉", end: "结束零星睡觉", ing: "零星睡觉中" },
 ];
 
@@ -126,9 +128,9 @@ const SPORT_TYPES = [
 ];
 
 const PRESET_BLOCK_NAMES = new Set([
-    "上午班", "下午班", "晚上班",
+    "上午班", "下午班", "晚上班", "自由工作",
     "早饭", "午饭", "晚饭", "宵夜",
-    "午睡", "晚上", "零星",
+    "午睡", "晚上", "零星", "起床", "就寝",
     "开车", "地铁", "公交", "骑行", "步行",
     "健身", "游玩", "学习", "洗漱", "洗澡", "娱乐", "烧饭", "洗碗",
     "开会", "结束开会", "上厕所", "上厕所回来",
@@ -136,6 +138,16 @@ const PRESET_BLOCK_NAMES = new Set([
 
 function mapTypedActions(types, openKey) {
     return types.map((item) => {
+        if (item.instant) {
+            return {
+                key: item.key,
+                mark: item.mark || item.key.slice(0, 1),
+                isOpen: false,
+                instant: true,
+                displayLabel: item.start,
+                ing: "",
+            };
+        }
         const isOpen = !!openKey && openKey === item.key;
         return {
             key: item.key,
@@ -613,6 +625,11 @@ Page({
     handleSleepTap(e) {
         const type = e.currentTarget.dataset.type;
         if (!type) return;
+        const def = SLEEP_TYPES.find((item) => item.key === type);
+        if (def && def.instant) {
+            this.record("sleep", "start", type);
+            return;
+        }
         const open = this.data.status.sleep_open || "";
         const phase = open === type ? "end" : "start";
         this.record("sleep", phase, type);

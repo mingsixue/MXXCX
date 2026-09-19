@@ -33,7 +33,7 @@
         <view class="expired-placeholder" wx:else>药</view>
         <view class="expired-main">
             <view class="expired-name">{{item.name}}</view>
-            <view class="expired-meta">{{item.type_text}}{{item.drug_form_text ? ' · ' + item.drug_form_text : ''}}</view>
+            <view class="expired-meta">{{item.type_text}}{{item.drug_form_text ? ' · ' + item.drug_form_text : ''}}{{item.affiliation_text ? ' · ' + item.affiliation_text : ''}}{{item.place_text ? ' · ' + item.place_text : ''}}</view>
             <view class="expired-date-row">
                 <view class="expired-date">到期：{{item.expire_date}}</view>
                 <view class="expired-days expired-days--{{item.remainingState}}" wx:if="{{item.remainingText}}">
