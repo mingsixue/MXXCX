@@ -1,14 +1,10 @@
-<mx-nav theme="light" title="登录" />
+<mx-nav theme="light" title="登录示例" />
 <view class="page-demo">
-    <view class="block tip">启动时会静默登录。也可手动重新登录，未进白名单时会返回 openid 便于录入。</view>
-    <mx-btn type="primary" width="100%" loading="{{loading}}" bind:tap="handleLogin">重新登录</mx-btn>
-    <view class="block tip" wx:if="{{isLogin && user}}">
-        已登录：{{user.nickname || user.nickName || '-'}}（{{user.affiliation_name || user.role || '-'}}）
-    </view>
-    <view class="block tip" wx:elif="{{openid}}">无访问权限，请将 openid 写入 mx_lnnx_user</view>
-    <view class="block tip" wx:if="{{openid}}">openid: {{openid}}</view>
+    <view class="block tip">演示 wx.login 获取 code 流程。真实项目应把 code 发给后端换取 token。</view>
+    <mx-btn type="primary" width="100%" bind:tap="handleLogin">获取 code</mx-btn>
+    <view class="block tip" wx:if="{{code}}">code: {{code}}</view>
     <view style="height:24rpx"></view>
-    <mx-btn type="default" width="100%" bind:tap="handleCopyOpenid">复制 openid</mx-btn>
+    <mx-btn type="default" width="100%" bind:tap="handleMockLogin">模拟写入登录态</mx-btn>
     <view style="height:24rpx"></view>
     <mx-btn type="default" width="100%" bind:tap="handleLogout">清除登录态</mx-btn>
 </view>

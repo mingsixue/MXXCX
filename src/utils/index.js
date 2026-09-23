@@ -15,9 +15,6 @@ import upload, {
     chooseAndUploadFile,
     uploadFileToOss,
 } from "./upload";
-import { chooseAndUploadLnnxImage } from "./lnnxUpload";
-import { ensureLnnxLogin, getLastDeniedOpenid, loginByCode } from "./lnnxAuth";
-import lnnxPermission from "./lnnxPermission";
 import auth from "./auth";
 import navigate from "./navigate";
 import date from "./date";
@@ -56,21 +53,12 @@ const MX = {
     /** @see user.js */
     ...user,
 
-    /** @see upload.js / lnnxUpload.js */
+    /** @see upload.js */
     upload,
     chooseAndUploadImage,
     chooseAndUploadVideo,
     chooseAndUploadFile,
     uploadFileToOss,
-    chooseAndUploadLnnxImage,
-
-    /** @see lnnxAuth.js */
-    ensureLnnxLogin,
-    getLastDeniedOpenid,
-    loginByCode,
-
-    /** @see lnnxPermission.js */
-    ...lnnxPermission,
 
     /** @see auth.js / navigate.js */
     ...auth,

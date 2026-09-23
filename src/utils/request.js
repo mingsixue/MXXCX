@@ -247,7 +247,6 @@ const request = (options = {}) => {
 
                         if (
                             message == "jwt expired" ||
-                            message == "成员不存在" ||
                             statusCode == "401" ||
                             statusCode === 401
                         ) {

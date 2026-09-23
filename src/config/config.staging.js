@@ -4,7 +4,7 @@
  */
 const CONFIG = {
     ENV: "staging",
-    APPID: "wxe992aaf1d44b3595",
+    APPID: "",
     HOST: "",
     APIHOST: "",
     OSSUPLOADHOST: "",
